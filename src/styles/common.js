@@ -5,7 +5,7 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #ffffff;
+  background-color: #f2f2f2;
 `;
 
 export const FormWrapper = styled.div`
@@ -44,7 +44,7 @@ export const Button = styled.button`
   color: white;
   border: none;
   font-size: 16px;
-  border-radius: 10px;
+  border-radius: 6px;
   cursor: pointer;
   margin-top: 10px;
 
