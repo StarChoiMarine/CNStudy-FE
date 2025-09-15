@@ -31,7 +31,7 @@ const SummaryWritePage = () => {
       console.error(err);
       alert("글 작성 중 오류가 발생했습니다.");
     }
-  };ss
+  };
 
   return (
     <div
