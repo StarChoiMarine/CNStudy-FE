@@ -36,10 +36,10 @@ const Logout = styled.button`
   &:hover{ filter:brightness(.95); }
 `;
 const Icon = styled.img`
-  align-items: center;  /* 세로 가운데 정렬 */
-  width: 18px;   /* 아이콘 크기 조절 */
+  align-items: center;  
+  width: 18px;  
   height: 18px;
-  border-radius: 50%; /* 원형으로 만들고 싶으면 추가 */
+  border-radius: 50%; 
   margin-right: 5px;
   margin-bottom: -2.5px;
 `;
@@ -64,7 +64,7 @@ export default function Header() {
       </Left>
       <Right>
         <LinkBtn to="/main">HOME</LinkBtn>
-        <LinkBtn to="/notes">Lecture Notes</LinkBtn>
+        <LinkBtn to="/summary">Lecture Notes</LinkBtn>
         <LinkBtn to="/calendar">Class Schedule</LinkBtn>
         <MyBtn to="/mypage"><Icon src={userIcon} alt="user icon" />  {user.name} 님</MyBtn>
         <Logout onClick={onLogout}>Logout</Logout>
