@@ -1,7 +1,7 @@
 // src/page/MainPage.jsx
 import React from "react";
 import styled from "styled-components";
-
+import Header from "../component/Header";
 // 컨테이너 스타일
 const Container = styled.div`
   display: flex;
@@ -18,6 +18,8 @@ const MainPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
 
   return (
+   <>
+    <Header />
     <Container>
       {user ? (
         <div>
@@ -28,6 +30,7 @@ const MainPage = () => {
         <div>로그인 정보가 없습니다. 다시 로그인해주세요.</div>
       )}
     </Container>
+    </>
   );
 };
 
