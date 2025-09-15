@@ -71,3 +71,40 @@ export const LinkText = styled.div`
     }
   }
 `;
+
+export const FieldRow = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+`;
+
+export const Select = styled.select`
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  height: 40px;
+  min-width: 110px;         /* 필요에 맞게 조절 */
+  padding: 0 40px 0 14px;   /* 오른쪽은 화살표 자리 */
+  border: 1px #e6e7ec;
+  border-radius: 10px;    /* 알약 모양 */
+  background-color: #f7f7fb;
+  color: #333;
+  font-size: 14px;
+  line-height: 40px;
+  outline: none;
+
+  &:hover {
+    border-color: #d7d8de;
+  }
+  
+  &:disabled {
+    background-color: #f7f7fb;
+    color: #b5b7bf;
+    opacity: 1;
+    cursor: not-allowed;
+  }
+
+  option { color: #333; }
+  option[value=""] { color: #9aa0a6; } /* placeholder 느낌 */
+`;
