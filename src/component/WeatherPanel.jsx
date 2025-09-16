@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Card = styled.div`
+  backdrop-filter: blur(10px);
   background: rgba(255,255,255,.88);
   border-radius: 16px; padding: 18px; width: 320px;
   box-shadow: 0 6px 24px rgba(0,0,0,.06);
