@@ -28,3 +28,4 @@ yarn-error.log*
 db.json
 #로컬 mock 데이터
 
+.history
