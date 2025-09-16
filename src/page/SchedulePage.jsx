@@ -11,6 +11,8 @@ import  Eclipse  from "../styles/images/Ellipse.png"
 
 const Wrapper = styled.div`
   width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   padding: clamp(12px, 2vw, 24px);
   box-sizing: border-box;
 `;
@@ -20,10 +22,10 @@ const Grid = styled.div`
   gap: clamp(16px, 2.5vw, 32px);
   align-items: start;
 
-  grid-template-columns: minmax(360px, 2fr) minmax(280px, 1fr);
+  grid-template-columns: minmax(520px, 3fr) minmax(320px, 2fr);
 
   /* 좁아지면: 1열로 강제 전환 → 겹침 방지 */
-  @media (max-width: 1665px) {
+  @media (max-width: 1370px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -32,73 +34,68 @@ const CalendarCol = styled.div`
   min-width: 0; 
 `;
 
+
 const Details = styled.div`
   min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding-right: clamp(32px, 6vw, 120px); 
+  padding-right: clamp(12px, 2vw, 40px); 
 
-  @media (max-width: 1000px) {
+  @media (max-width: 1370px) {
     align-items: stretch;
-    padding-right: clamp(20px, 5vw, 80px);
+    padding-right: 0;
   }
 `;
 
 const Title = styled.h2`
   text-align: right;
-  font-size: clamp(35px, 4vw, 50px);
-  margin: 100px 0 5px;
-  margin-right: 20px;
+  font-size: clamp(1.25rem, 2vw, 2rem);
+  margin:  12px 8px 4px;
   line-height: 1.1;
+  @media (max-width: 1370px) {
+    text-align: left;
+    margin: 16px 0 8px;
+  }
 `;
 
 const DetailsImg1 = styled.div`
   position: relative;
   width: 100%;
-  max-width: 820px;
-  aspect-ratio: 1 / 1;
+  max-width: 300px;
+  aspect-ratio: 4 / 3;
   background: url(${ScheduleDetailsImg}) center / contain no-repeat;
   border-radius: 12px;
 
-  @media (max-width: 1665px) {
-    max-width: none;
+  @media (max-width: 1370px) {
+    max-width: 300px;
     aspect-ratio: 3 / 2;
   }
 `;
 
-const DetailsImg2 = styled.div`
-  position: relative;
-  width: 100%;
-  max-width: 820px;
-  aspect-ratio: 1 / 1;
-  background: url(${TodoListImg}) center / contain no-repeat;
-  border-radius: 12px;
-
-  @media (max-width: 1665px) {
-    max-width: none;
-    aspect-ratio: 3 / 2;
-  }
+const DetailsImg2 = styled(DetailsImg1)`
+  background-image: url(${TodoListImg});
 `;
 
-const DetailsContent = styled.li`
-  position: absolute;                 
-  inset: 13% 8% 12% 8%;                
+const DetailsContent = styled.div`
+  position: absolute;
+  inset: 13% 8% 12% 8%;
   overflow: auto;
   display: grid;
-  gap: 10px;
-  font-size: clamp(30px, 1.2vw, 40px);
-  line-height: 3.75;
+  gap: 0.6rem;
+  font-size: clamp(14px, 1vw, 18px);
+  line-height: 1.4;
   color: #111;
-  font-weight: bold;
+  font-weight: 700;
+
+  
+  & ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 `;
 
-const Card = styled.li`
-  list-style: none;
-  padding: 12px;
-  border-radius: 12px;
-  
-`;
 
 export default function SchedulePage() {
     const [selectedDate, setSelectedDate] = useState(null);
@@ -126,7 +123,7 @@ export default function SchedulePage() {
                                 style={{
                                     listStyleType: "disc",
                                     listStyleImage: `url(${Eclipse})`,
-                                    paddingLeft: "0.2rem",
+                                    paddingLeft: 5,
                                 }}>{ev.title}</li>   
                             ))}
                         </ul>

@@ -56,8 +56,8 @@ export default function ScheduleCalendar ({onSelectDate, selectedDate}) {
 
 
     return (
-        <div style={{ padding: "clamp(12px, 2vw, 20px)" }}>
-        <h1 style={{ fontSize: "clamp(24px, 5vw, 60px)", lineHeight: 1.1, margin: 0 }}>
+        <div style={{ padding: "clamp(4px, 1.5vw, 8px)" }}>
+        <h1 style={{ fontSize: "clamp(15px, 3.5vw, 30px)", lineHeight: 1.1, margin: 0 }}>
         Class Schedule
         </h1>
 
@@ -65,9 +65,9 @@ export default function ScheduleCalendar ({onSelectDate, selectedDate}) {
         style={{
             display: "flex",
             alignItems: "center",
-            gap: "clamp(8px, 2vw, 16px)",
-            marginTop: "clamp(8px, 1.5vw, 12px)",
-            marginBottom: "clamp(8px, 2vw, 20px)",
+            gap: "clamp(6px, 1.5vw, 12px)",
+            marginTop: "clamp(6px, 1vw, 10px)",
+            marginBottom: "clamp(6px, 1.5vw, 14px)",
         }}
         >
         <button
@@ -81,13 +81,13 @@ export default function ScheduleCalendar ({onSelectDate, selectedDate}) {
             }}
             aria-label="이전 달"
         >
-            <IoChevronBack size={32} />
+            <IoChevronBack size={20} />
         </button>
 
         <h2
             style={{
             textAlign: "left",
-            fontSize: "clamp(20px, 4vw, 50px)",
+            fontSize: "clamp(10px, 3vw, 20px)",
             lineHeight: 1.1,
             margin: 0,
             flex: "0 1 auto",
@@ -107,19 +107,19 @@ export default function ScheduleCalendar ({onSelectDate, selectedDate}) {
             }}
             aria-label="다음 달"
         >
-            <IoChevronForward size={32} />
+            <IoChevronForward size={20} />
         </button>
         </div>
 
         <div
         style={{
             display: "grid",
-            gridTemplateColumns: "repeat(7, minmax(150px, 1fr))",
+            gridTemplateColumns: "repeat(7, minmax(140px, 1fr))",
             textAlign: "center",
             fontWeight: "normal",
-            fontSize: "clamp(12px, 2.2vw, 20px)",
+            fontSize: "clamp(6px, 3vw, 15px)",
             userSelect: "none",
-            fontSize: "35px"
+            
         }}
         >
         <div>SUN</div>
@@ -134,7 +134,7 @@ export default function ScheduleCalendar ({onSelectDate, selectedDate}) {
         <div
         style={{
             display: "grid",
-            gridTemplateColumns: "repeat(7, minmax(150px, 1fr))",
+            gridTemplateColumns: "repeat(7, minmax(140px, 1fr))",
             borderLeft: "1px solid #e6e6e6",
             marginTop: 10,
         }}
@@ -156,8 +156,8 @@ export default function ScheduleCalendar ({onSelectDate, selectedDate}) {
                 key={idx}
                 onClick={() => onSelectDate?.(key)}
                 style={{
-                minHeight: "clamp(160px, 20vw, 320px)",
-                padding: "clamp(12px, 2.2vw, 36px)",
+                minHeight: "clamp(80px, 5vw, 120px)",
+                padding: "clamp(1px, 0.5vw, 4px)",
                 textAlign: "center",
                 backgroundColor: isCurrentMonth ? "#fff" : "#fafafa",
                 borderRight: "1px solid #e6e6e6",
@@ -170,10 +170,10 @@ export default function ScheduleCalendar ({onSelectDate, selectedDate}) {
                         fontWeight: 600,
                         marginBottom: "clamp(4px, 0.8vw, 10px)",
                         margin: "0 auto",
-                        fontSize: "clamp(15px, 2.2vw, 30px)",
-                        width: "50px",
-                        height: "50px",
-                        lineHeight: "50px",
+                        fontSize: "clamp(10px, 1.2vw, 12px)",
+                        width: "clamp(16px, 2vw, 20px)",
+                        height: "clamp(16px, 2vw, 20px)",
+                        lineHeight: "clamp(16px, 2vw, 20px)",
                         borderRadius: "50%",
                         backgroundColor: isToday ? "#ffa090" : "transparent",
                         color: isToday ? "#fff" : "#000",
@@ -188,7 +188,7 @@ export default function ScheduleCalendar ({onSelectDate, selectedDate}) {
                     display: "grid",
                     gap: 6,
                     textAlign: "left",
-                    maxHeight: "calc(100% - 58px)", 
+                    maxHeight: "calc(100% - 22px)", 
                     overflow: "hidden",
                     }}
                 >
@@ -196,11 +196,11 @@ export default function ScheduleCalendar ({onSelectDate, selectedDate}) {
                         <div
                             key={ev.id}
                             style={{
-                            fontSize: "clamp(16px, 1.8vw, 25px)",
+                            fontSize: "clamp(8px, 1vw, 10px)",
                             fontWeight: "bold",
-                            padding: "15px 20px",
-                            borderRadius: 40,
-                            background: "#FFBD86",
+                            padding: "0 clamp(2px, 0.5vw, 4px)",
+                            //borderRadius: 6,
+                            background: "#ffbc864a",
                             whiteSpace: "nowrap",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
