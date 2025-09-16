@@ -65,7 +65,7 @@ export default function Header() {
       <Right>
         <LinkBtn to="/main">HOME</LinkBtn>
         <LinkBtn to="/summary">Lecture Notes</LinkBtn>
-        <LinkBtn to="/calendar">Class Schedule</LinkBtn>
+        <LinkBtn to="/schedule">Class Schedule</LinkBtn>
         <MyBtn to="/mypage"><Icon src={userIcon} alt="user icon" />  {user.name} 님</MyBtn>
         <Logout onClick={onLogout}>Logout</Logout>
       </Right>
