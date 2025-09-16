@@ -2,6 +2,9 @@
 import React, { useEffect, useState } from "react";
 import { http } from "../api/axios";
 import { Link } from "react-router-dom";
+import Header from "../components/Header";
+
+
 
 // ✅ 공통 스타일 불러오기
 import { Container, FormWrapper, Title, Button } from "../styles/common";
@@ -11,25 +14,13 @@ const SummaryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const { data } = await http.get("/summaries");
-  //       const sorted = data.sort((a, b) => b.id - a.id);
-  //       setSummaries(sorted);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
 
   useEffect(() => {
   const fetchData = async () => {
     try {
       const { data } = await http.get("/summaries");
 
-      // ✅ 숫자 id 우선 정렬
+      // id 기준 내림차순 정렬 (숫자형 id 고려)
       const toNum = (v) => {
         const n = Number(v);
         return Number.isFinite(n) ? n : -Infinity;
@@ -51,6 +42,9 @@ const SummaryPage = () => {
   const totalPages = Math.ceil(summaries.length / postsPerPage);
 
   return (
+      <>
+      <Header /> {/* ✅ 여기서 헤더 추가 */}
+
     <Container style={{ alignItems: "flex-start", paddingTop: "40px" }}>
       <FormWrapper style={{ width: "1000px" }}>
         <Title>강의 내용 게시판</Title>

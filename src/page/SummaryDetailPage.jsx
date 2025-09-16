@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { http } from "../api/axios";
 import "../styles/SummaryDetailPage.css";
+import Header from "../components/Header";
+
+
 
 const SummaryDetailPage = () => {
   const { id } = useParams(); 
@@ -54,6 +57,9 @@ const SummaryDetailPage = () => {
   if (!summary) return <p>로딩 중...</p>;
 
   return (
+     <>
+      <Header /> {/* ✅ 여기서 헤더 추가 */}
+
     <div className="container">
       <h2 className="title">Lecture Note</h2>
 

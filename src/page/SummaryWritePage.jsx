@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { http } from "../api/axios";
+import Header from "../components/Header";
+
 
 // ✅ 공통 스타일 가져오기
 import {
@@ -18,33 +20,6 @@ const SummaryWritePage = () => {
   const [content, setContent] = useState("");
   const navigate = useNavigate();
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!title || !content) {
-  //     alert("제목과 강의 내용을 입력하세요!");
-  //     return;
-  //   }
-
-  //   const user = JSON.parse(localStorage.getItem("user"));
-
-  //   try {
-  //     await http.post("/summaries", {
-  //       title,
-  //       url,
-  //       content,
-  //       author: user?.name || "알 수 없음",
-  //       date: new Date().toISOString().split("T")[0],
-  //     });
-
-  //     alert("글이 작성되었습니다!");
-  //     navigate("/summary");
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert("글 작성 중 오류가 발생했습니다.");
-  //   }
-  // };
-// SummaryWritePage.jsx (핵심만)
 const handleSubmit = async (e) => {
   e.preventDefault();
   if (!title || !content) return alert("제목과 강의 내용을 입력하세요!");
@@ -73,6 +48,9 @@ const handleSubmit = async (e) => {
 };
 
   return (
+     <>
+      <Header /> {/* ✅ 여기서 헤더 추가 */}
+
     <Container>
       <FormWrapper>
         <Title>Lecture Note Writing</Title>
