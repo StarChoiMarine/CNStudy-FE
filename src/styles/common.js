@@ -74,7 +74,7 @@ export const LinkText = styled.div`
 
 export const FieldRow = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 8px;
   margin-top: 10px;
 `;
 
@@ -83,16 +83,17 @@ export const Select = styled.select`
   -webkit-appearance: none;
   -moz-appearance: none;
 
-  height: 40px;
-  min-width: 110px;         /* 필요에 맞게 조절 */
-  padding: 0 40px 0 14px;   /* 오른쪽은 화살표 자리 */
+  height: 32px;
+  min-width: 84px;         
+  padding: 0 28px 0 10px;   
   border: 1px #e6e7ec;
-  border-radius: 10px;    /* 알약 모양 */
+  border-radius: 8px;    
   background-color: #f7f7fb;
   color: #333;
-  font-size: 14px;
-  line-height: 40px;
+  font-size: 13px;
+  line-height: normal;
   outline: none;
+  margin-bottom: 10px;
 
   &:hover {
     border-color: #d7d8de;
@@ -106,6 +107,6 @@ export const Select = styled.select`
   }
 
   option { color: #333; }
-  option[value=""] { color: #9aa0a6; } /* placeholder 느낌 */
+  option[value=""] { color: #9aa0a6; } 
 `;
 
