@@ -3,103 +3,103 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { http } from "../api/axios";
 
+// ✅ 공통 스타일 가져오기
+import {
+  Container,
+  FormWrapper,
+  Title,
+  Input,
+  Button,
+} from "../styles/common"; // common.js 위치에 맞게 경로 확인
+
 const SummaryWritePage = () => {
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [content, setContent] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
 
-    if (!title || !content) {
-      alert("제목과 강의 내용을 입력하세요!");
-      return;
-    }
+  //   if (!title || !content) {
+  //     alert("제목과 강의 내용을 입력하세요!");
+  //     return;
+  //   }
 
-    // 로그인된 사용자 정보 가져오기
-    const user = JSON.parse(localStorage.getItem("user"));
+  //   const user = JSON.parse(localStorage.getItem("user"));
 
-    try {
-      await http.post("/summaries", {
-        title,
-        url,
-        content,
-        author: user?.name || "알 수 없음", // 로그인 사용자 이름 자동 저장
-        date: new Date().toISOString().split("T")[0],
-      });
+  //   try {
+  //     await http.post("/summaries", {
+  //       title,
+  //       url,
+  //       content,
+  //       author: user?.name || "알 수 없음",
+  //       date: new Date().toISOString().split("T")[0],
+  //     });
 
-      alert("글이 작성되었습니다!");
-      navigate("/summary");
-    } catch (err) {
-      console.error(err);
-      alert("글 작성 중 오류가 발생했습니다.");
-    }
-  };
+  //     alert("글이 작성되었습니다!");
+  //     navigate("/summary");
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("글 작성 중 오류가 발생했습니다.");
+  //   }
+  // };
+// SummaryWritePage.jsx (핵심만)
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!title || !content) return alert("제목과 강의 내용을 입력하세요!");
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // 1) 현재 summaries 불러와서 숫자 id의 최댓값 계산
+  const { data: all } = await http.get("/summaries");
+  const numericIds = all
+    .map(x => Number(x.id))
+    .filter(n => Number.isFinite(n));
+  const nextId = (numericIds.length ? Math.max(...numericIds) : 0) + 1;
+
+  // 2) 우리가 id를 직접 지정해 POST
+  await http.post("/summaries", {
+    id: nextId,               // ★ 직접 숫자 id 부여
+    title,
+    url,
+    content,
+    author: user?.name || "알 수 없음",
+    date: new Date().toISOString().split("T")[0],
+  });
+
+  alert("글이 작성되었습니다!");
+  navigate("/summary");
+};
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",  // ✅ 세로 위쪽 정렬
-        minHeight: "100vh",        // ✅ 최소 화면 높이 채움
-        paddingTop: "60px",        // ✅ 위쪽 여백
-        paddingBottom: "60px",     // ✅ 아래쪽 여백
-        backgroundColor: "#f9f9f9",
-      }}
-    >
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          width: "1000px",   // ✅ 기존보다 넓게
-          padding: "40px",
-          backgroundColor: "white",
-          borderRadius: "12px",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        }}
-      >
-        <h2
-          style={{
-            textAlign: "center",
-            marginBottom: "30px",
-            fontFamily: "monospace",
-          }}
-        >
-          Lecture Note Writing
-        </h2>
+    <Container>
+      <FormWrapper>
+        <Title>Lecture Note Writing</Title>
 
         {/* 제목 */}
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "15px" }}>
-          <label style={{ width: "100px", fontWeight: "bold" }}>제 목</label>
-          <input
+        <div style={{ marginBottom: "15px" }}>
+          <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>
+            제 목
+          </label>
+          <Input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="제목을 입력해주세요."
-            style={{
-              flex: 1,
-              padding: "8px",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-            }}
           />
         </div>
 
         {/* URL */}
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "15px" }}>
-          <label style={{ width: "100px", fontWeight: "bold" }}>URL</label>
-          <input
+        <div style={{ marginBottom: "15px" }}>
+          <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>
+            URL
+          </label>
+          <Input
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="강의 내용과 관련된 링크를 첨부할 수 있습니다."
-            style={{
-              flex: 1,
-              padding: "8px",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-            }}
           />
         </div>
 
@@ -112,34 +112,28 @@ const SummaryWritePage = () => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="학습한 내용을 입력해주세요."
-            rows="8"   // ✅ 조금 더 늘려줌
+            rows="8"
             style={{
               width: "100%",
-              padding: "10px",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
+              padding: "12px",
+              border: "1px solid #ccc",
+              borderRadius: "6px",
+              fontSize: "16px",
             }}
           />
         </div>
 
         {/* 버튼 */}
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
-          <button
-            type="button"
-            onClick={() => navigate("/summary")}
-            className="button"   // ✅ 통일
-          >
+        <div style={{ display: "flex", gap: "10px" }}>
+          <Button type="button" onClick={() => navigate("/summary")}>
             목록보기
-          </button>
-          <button
-            type="submit"
-            className="button"   // ✅ 통일
-          >
+          </Button>
+          <Button type="submit" onClick={handleSubmit}>
             글 작성
-          </button>
+          </Button>
         </div>
-      </form>
-    </div>
+      </FormWrapper>
+    </Container>
   );
 };
 

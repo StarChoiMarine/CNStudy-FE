@@ -13,8 +13,8 @@ const Logo = styled.div`font-weight:800; font-size:35px;`;
 const LinkBtn = styled(NavLink)`
   padding:6px 10px; border-radius:8px; text-decoration:none; color:#333;
   font-size:20px;
-  &:hover{ background-color: #e2b2c6ff; }
-  &.active { background:#ff68a527; color:#ff4f97; font-weight:700; }
+  &:hover{ background: #ffd1e4ff; }
+  &.active { background:#ff68a5; color:#ffffff; font-weight:400; }
 `;
 const MyBtn = styled(NavLink)`
   align-items: center;  /* 세로 가운데 정렬 */
@@ -65,7 +65,7 @@ export default function Header() {
       <Right>
         <LinkBtn to="/main">HOME</LinkBtn>
         <LinkBtn to="/summary">Lecture Notes</LinkBtn>
-        <LinkBtn to="/calendar">Class Schedule</LinkBtn>
+        <LinkBtn to="/schedule">Class Schedule</LinkBtn>
         <MyBtn to="/mypage"><Icon src={userIcon} alt="user icon" />  {user.name} 님</MyBtn>
         <Logout onClick={onLogout}>Logout</Logout>
       </Right>

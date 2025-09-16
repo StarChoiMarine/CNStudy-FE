@@ -2,14 +2,18 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { http } from "../api/axios"; // 경로 확인: src/page → src/api/axios.js
 import { Container, FormWrapper, Title, Input, Button, LinkText } from "../styles/common";
-
+import {Eye, EyeOff} from "lucide-react"; //비밀번호 감추기 버튼 이미지
 
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [passwd, setPasswd] = useState("");
+  const [isShowPasswd, setIsShowPasswd] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const toggleShowPasswd = () => 
+    setIsShowPasswd(prev => !prev);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,6 +25,9 @@ const LoginPage = () => {
 
     try {
       setLoading(true);
+      console.log("[debug] >>> email : ", email);
+      console.log("[debug] >>> passwd : ", passwd);
+
       // json-server: GET /users?email=...&passwd=...
       const { data } = await http.get("/users", { params: { email, passwd } });
 
@@ -44,24 +51,56 @@ const LoginPage = () => {
 
   return (
     <Container>
-      <FormWrapper>
+      <FormWrapper as="form" style={{ display: "flex", flexDirection: "column", gap: "30px"}}>
         <Title>로그인</Title>
 
+        <div className="email-group">
+        <label>이메일</label>
         <Input
           type="email"
-          placeholder="이메일"
+          placeholder="이메일을 입력해 주세요"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          style={{backgroundColor: "#F7F7FB", 
+                  height:"35px", 
+                  border: "none", 
+                  marginTop: "10px"}}
           required
         />
+        </div>
 
-        <Input
-          type="password"
-          placeholder="비밀번호"
-          value={passwd}
-          onChange={(e) => setPasswd(e.target.value)}
-          required
-        />
+        <div className="passwd-group" style = {{position: "relative", width: "100%"}}>
+          <label>비밀번호</label>
+          <Input
+            type={isShowPasswd ? "text" : "password"}
+            placeholder="비밀번호를 입력해 주세요"
+            value={passwd}
+            onChange={(e) => setPasswd(e.target.value)}
+            style={{backgroundColor: "#F7F7FB", 
+                    height:"35px", 
+                    border: "none",
+                    marginTop: "10px"}}
+            required
+          />
+          <button
+            type="button"
+            onClick={toggleShowPasswd}
+            aria-label={isShowPasswd ? "비밀번호 숨기기" : "비밀번호 보기"}
+            style={{
+              position: "absolute",
+              right: 10,
+              top: "55%",
+              transform: "translateY(-50%)",
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+              lineHeight: 0, 
+            }}
+          >
+            {isShowPasswd ? <Eye /> : <EyeOff />}
+          </button>
+        </div>
 
         <Button type="button" onClick={handleSubmit} disabled={loading}>
           {loading ? "처리 중..." : "로그인"}
@@ -76,3 +115,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+

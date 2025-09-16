@@ -68,13 +68,14 @@
   border: none;
   font-size: 18px;
   cursor: pointer;
-  color: #ff6b81;
+  color: #FF68A5;   /* ✅ 공통 컬러 */
   margin-bottom: 25px;
   transition: transform 0.1s ease-in-out;
 }
 
 .likeButton:hover {
   transform: scale(1.1);
+  color: #e05595;   /* ✅ hover 시 공통 컬러 */
 }
 
 /* 댓글 입력 박스 */
@@ -97,7 +98,7 @@
 /* 등록 버튼 (목록보기와 동일 컬러) */
 .commentButton {
   align-self: flex-end;
-  background: #ff6b81;
+  background: #FF68A5;   /* ✅ 공통 컬러 */
   color: white;
   padding: 10px 18px;
   border: none;
@@ -108,7 +109,7 @@
 }
 
 .commentButton:hover {
-  background: #ff3366;
+  background: #e05595;   /* ✅ hover 시 공통 컬러 */
 }
 
 /* 댓글 목록 */
@@ -148,15 +149,14 @@
 .button {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #ff6b81;
+  background-color: #FF68A5;   /* ✅ 공통 컬러 */
   border-radius: 8px;
   text-decoration: none;
-  color:white;
+  color: white;
   font-size: 14px;
   transition: background-color 0.2s ease-in-out;
 }
 
 .button:hover {
-  background-color: #ff3366;
+  background-color: #e05595;   /* ✅ hover 시 공통 컬러 */
 }
-
