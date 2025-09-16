@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { http } from "../api/axios";
 import { Link } from "react-router-dom";
-import Header from "../components/Header";
+import Header from "../component/Header";
 
 
 
@@ -122,6 +122,7 @@ const SummaryPage = () => {
         </div>
       </FormWrapper>
     </Container>
+    </>
   );
 };
 

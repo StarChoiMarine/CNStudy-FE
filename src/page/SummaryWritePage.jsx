@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { http } from "../api/axios";
-import Header from "../components/Header";
+import Header from "../component/Header";
 
 
 // ✅ 공통 스타일 가져오기
@@ -33,15 +33,15 @@ const handleSubmit = async (e) => {
     .filter(n => Number.isFinite(n));
   const nextId = (numericIds.length ? Math.max(...numericIds) : 0) + 1;
 
-  // 2) 우리가 id를 직접 지정해 POST
   await http.post("/summaries", {
-    id: nextId,               // ★ 직접 숫자 id 부여
-    title,
-    url,
-    content,
-    author: user?.name || "알 수 없음",
-    date: new Date().toISOString().split("T")[0],
-  });
+  id: String(nextId),   // ✅ 숫자를 문자열로 변환해서 저장
+  title,
+  url,
+  content,
+  author: user?.name || "알 수 없음",
+  date: new Date().toISOString().split("T")[0],
+});
+
 
   alert("글이 작성되었습니다!");
   navigate("/summary");
@@ -112,6 +112,7 @@ const handleSubmit = async (e) => {
         </div>
       </FormWrapper>
     </Container>
+  </>
   );
 };
 

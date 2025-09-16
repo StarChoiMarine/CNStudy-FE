@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { http } from "../api/axios";
 import "../styles/SummaryDetailPage.css";
-import Header from "../components/Header";
+import Header from "../component/Header";
 
 
 
@@ -157,8 +157,11 @@ const SummaryDetailPage = () => {
           comments.map((c, i) => (
             <div key={i} className="commentItem">
               <p className="commentAuthor">{c.author || "익명"}</p>
+
+                  <div className="commentRow">
               <p className="commentText">{c.text}</p>
               <span className="commentDate">{c.date}</span>
+            </div>
             </div>
           ))
         )}
@@ -171,6 +174,8 @@ const SummaryDetailPage = () => {
         </Link>
       </div>
     </div>
+    </>
+    
   );
 };
 
