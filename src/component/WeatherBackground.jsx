@@ -11,11 +11,21 @@ import rainyNight   from "../styles/videos/rainy-night.mp4";
 
 
 const Wrap = styled.div`
-  position: fixed; inset: 0; z-index: -1; overflow: hidden;
-  &::after { content: ""; position: absolute; inset: 0; background: rgba(255,255,255,.22); }
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: -1;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, .22);
+  }
 `;
 const Video = styled.video`
   width: 100%; height: 100%; object-fit: cover;
+  object-position: center top;
   filter: saturate(1.05) contrast(1.02);
 `;
 
