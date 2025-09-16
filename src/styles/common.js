@@ -71,3 +71,42 @@ export const LinkText = styled.div`
     }
   }
 `;
+
+export const FieldRow = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+`;
+
+export const Select = styled.select`
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  height: 32px;
+  min-width: 84px;         
+  padding: 0 28px 0 10px;   
+  border: 1px #e6e7ec;
+  border-radius: 8px;    
+  background-color: #f7f7fb;
+  color: #333;
+  font-size: 13px;
+  line-height: normal;
+  outline: none;
+  margin-bottom: 10px;
+
+  &:hover {
+    border-color: #d7d8de;
+  }
+  
+  &:disabled {
+    background-color: #f7f7fb;
+    color: #b5b7bf;
+    opacity: 1;
+    cursor: not-allowed;
+  }
+
+  option { color: #333; }
+  option[value=""] { color: #9aa0a6; } 
+`;
+
