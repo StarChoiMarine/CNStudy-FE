@@ -64,15 +64,15 @@ const SummaryDetailPage = () => {
       <h2 className="title">Lecture Note</h2>
 
       {/* 글 정보 테이블 */}
-              <table className="table">
+       <table className="table">
         <tbody>
           <tr>
           <td><strong>제목</strong></td>
-          <td colSpan="5">{summary.title}</td>
+          <td colSpan="7">{summary.title}</td>
         </tr>
         <tr>
           <td><strong>URL</strong></td>
-          <td colSpan="5">
+          <td colSpan="7">
             <a href={summary.url} target="_blank" rel="noreferrer">
               {summary.url}
             </a>
@@ -83,6 +83,8 @@ const SummaryDetailPage = () => {
           <td>{summary.author}</td>
           <td><strong>작성일</strong></td>
           <td>{summary.date}</td>
+          <td><strong>카테고리</strong></td>
+          <td>{summary.category || "기타"}</td>
           <td><strong>조회수</strong></td>
           <td>{summary.views || 0}</td>
         </tr>
@@ -92,10 +94,10 @@ const SummaryDetailPage = () => {
 
 
 
-      {/* 본문 */}
+  {/* 본문 */}
       <div className="contentBox">{summary.content}</div>
 
-      {/* 좋아요 버튼 */}
+  {/* 좋아요 버튼 */}
       <button
   className="likeButton"
   onClick={() => {
@@ -134,7 +136,7 @@ const SummaryDetailPage = () => {
 </button>
 
 
-      {/* 댓글 입력 */}
+  {/* 댓글 입력 */}
       <div className="commentBox">
         <textarea
           rows="3"
@@ -148,7 +150,7 @@ const SummaryDetailPage = () => {
         </button>
       </div>
 
-      {/* 댓글 목록 */}
+  {/* 댓글 목록 */}
       <div>
         <h4 className="commentTitle">댓글</h4>
         {comments.length === 0 ? (
@@ -167,15 +169,34 @@ const SummaryDetailPage = () => {
         )}
       </div>
 
-      {/* 목록 버튼 */}
+   {/* 목록 버튼 */}
       <div style={{ marginTop: "30px" ,  textAlign: "right"}}>
         <Link to="/summary" className="button">
           목록보기
         </Link>
       </div>
+
+ {/* 해시태그 */}
+ 
+      <div style={{ marginTop: "15px" }}>
+        {summary.hashtags?.map((tag, idx) => (
+          <Link 
+            key={idx} 
+            to={`/summary?tag=${encodeURIComponent(tag)}`} 
+            style={{
+              marginRight: "8px",
+              color: "#007BFF",
+              textDecoration: "none",
+              fontWeight: "bold"
+            }}
+          >
+            #{tag}
+          </Link>
+        ))}
+      </div>
+
     </div>
-    </>
-    
+   </>
   );
 };
 

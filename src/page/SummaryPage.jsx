@@ -1,10 +1,8 @@
 // src/page/SummaryPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { http } from "../api/axios";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Header from "../component/Header";
-
-
 
 // ✅ 공통 스타일 불러오기
 import { Container, FormWrapper, Title, Button, Input } from "../styles/common";
@@ -13,6 +11,8 @@ const SummaryPage = () => {
   const [summaries, setSummaries] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
+  const [category, setCategory] = useState("전체");
+  const location = useLocation();
 
   // 🔍 검색 상태
   const [query, setQuery] = useState("");
@@ -23,21 +23,29 @@ const SummaryPage = () => {
       try {
         const { data } = await http.get("/summaries");
 
-        // id 기준 내림차순 정렬 (숫자형/문자형 id 안전 처리)
+        // id 기준 내림차순 정렬
         const toNum = (v) => {
           const n = Number(v);
           return Number.isFinite(n) ? n : -Infinity;
         };
-        const sorted = [...data].sort((a, b) => toNum(b.id) - toNum(a.id));
+        let sorted = [...data].sort((a, b) => toNum(b.id) - toNum(a.id));
+
+        // ✅ 쿼리파라미터(tag) 확인해서 해시태그 필터링
+        const params = new URLSearchParams(location.search);
+        const tag = params.get("tag");
+        if (tag) {
+          sorted = sorted.filter((s) => s.hashtags?.includes(tag));
+        }
+
         setSummaries(sorted);
       } catch (err) {
         console.error(err);
       }
     };
     fetchData();
-  }, []);
+  }, [location.search]);
 
-  // 🔍 필터링 된 목록 (범위 + 검색어)
+  // 🔍 검색 필터링
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return summaries;
@@ -73,7 +81,7 @@ const SummaryPage = () => {
         <FormWrapper style={{ width: "1000px", maxWidth: "100%" }}>
           <Title>강의 내용 게시판</Title>
 
-          {/* 🔍 검색 바 (우측 정렬) */}
+          {/* 🔍 검색 바 */}
           <div
             style={{
               display: "flex",
@@ -107,7 +115,6 @@ const SummaryPage = () => {
                 placeholder="검색어를 입력하세요"
                 style={{ width: 240, paddingRight: 34 }}
               />
-              {/* 돋보기 모양 (간단히 글리프) */}
               <span
                 style={{
                   position: "absolute",
@@ -123,6 +130,7 @@ const SummaryPage = () => {
             </div>
           </div>
 
+          {/* 목록 테이블 */}
           <table
             style={{
               width: "100%",
@@ -134,15 +142,16 @@ const SummaryPage = () => {
               <tr style={{ borderBottom: "2px solid #ddd" }}>
                 <th style={{ padding: "10px" }}>번호</th>
                 <th style={{ padding: "10px" }}>제목</th>
-                <th style={{ padding: "10px" }}>날짜</th>
                 <th style={{ padding: "10px" }}>작성자</th>
+                <th style={{ padding: "10px" }}>날짜</th>
+                <th style={{ padding: "10px" }}>카테고리</th>
               </tr>
             </thead>
 
             <tbody>
               {currentSummaries.length === 0 ? (
                 <tr>
-                  <td colSpan={4} style={{ textAlign: "center", padding: 24 }}>
+                  <td colSpan={5} style={{ textAlign: "center", padding: 24 }}>
                     검색 결과가 없습니다.
                   </td>
                 </tr>
@@ -159,10 +168,13 @@ const SummaryPage = () => {
                       </Link>
                     </td>
                     <td style={{ textAlign: "center", padding: "8px" }}>
+                      {s.author}
+                    </td>
+                    <td style={{ textAlign: "center", padding: "8px" }}>
                       {s.date}
                     </td>
                     <td style={{ textAlign: "center", padding: "8px" }}>
-                      {s.author}
+                      {s.category || "기타"}
                     </td>
                   </tr>
                 ))
@@ -208,16 +220,18 @@ const SummaryPage = () => {
               </button>
             ))}
 
-          <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            style={{ margin: "0 5px" }}
-          >
-            {">"}
-          </button>
-        </div>
-      </FormWrapper>
-    </Container>
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              style={{ margin: "0 5px" }}
+            >
+              {">"}
+            </button>
+          </div>
+        </FormWrapper>
+      </Container>
     </>
   );
 };
