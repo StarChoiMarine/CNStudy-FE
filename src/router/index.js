@@ -6,7 +6,8 @@ import SummaryPage from "../page/SummaryPage";
 import SummaryDetailPage from "../page/SummaryDetailPage";
 import SummaryWritePage from "../page/SummaryWritePage";
 import SchedulePage from "../page/SchedulePage";
-
+import MyPage from "../page/MyPage";
+import MyPageEdit from "../page/MyPageEdit";
 
 
 export default function AppRoutes() {
@@ -21,10 +22,9 @@ export default function AppRoutes() {
       <Route path="/summary/write" element={<SummaryWritePage />} />
 
       <Route path="/schedule" element={<SchedulePage />} />
-
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/mypage/edit" element={<MyPageEdit />} />
-
+      
 
     </Routes>
   );
