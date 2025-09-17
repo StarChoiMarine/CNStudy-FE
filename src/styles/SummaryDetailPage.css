@@ -40,7 +40,6 @@
   border: none;
   font-size: 18px;
   cursor: pointer;
-<<<<<<< HEAD
   color: #FF68A5;   /* 공통 컬러 */
   margin-bottom: 25px;
   transition: transform 0.1s ease-in-out;
@@ -52,12 +51,6 @@
 }
 
 /* 댓글 입력 박스 */
-=======
-  color: hotpink;
-  margin-bottom: 20px;
-}
-
->>>>>>> dev
 .commentBox {
   margin-bottom: 20px;
   position: relative;
@@ -102,18 +95,12 @@
 }
 .commentInput {
   width: 100%;
-<<<<<<< HEAD
    max-width: 100%; 
    box-sizing: border-box;  
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
   resize: none;
-=======
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
->>>>>>> dev
   font-size: 14px;
   box-sizing: border-box;
 }
@@ -133,7 +120,6 @@
   margin-bottom: 10px;
 }
 
-<<<<<<< HEAD
 /* 등록 버튼 (목록보기와 동일 컬러) */
 .commentButton {
   align-self: flex-end;
@@ -169,20 +155,10 @@
 
 .commentItem:first-child {
   border-top: none;
-=======
-.commentItem {
-  border: 1px solid #eee;
-  border-radius: 5px;
-  padding: 12px;
-  margin-bottom: 10px;
-  background: #fafafa;
-  position: relative;
->>>>>>> dev
 }
 
 .commentAuthor {
   font-weight: bold;
-<<<<<<< HEAD
   color: #222;
   margin-bottom: 2px;
 }
@@ -192,13 +168,6 @@
   display: flex;
   justify-content: space-between; /* 왼쪽: 내용 / 오른쪽: 날짜 */
   align-items: center;
-=======
-  margin-bottom: 5px;
-}
-
-.commentText {
-  margin: 5px 0;
->>>>>>> dev
 }
 /* .commentContent {
   flex: 1; /* 내용이 가능한 공간을 차지하도록 */
@@ -210,7 +179,6 @@
   right: 10px;
   bottom: 8px;
   font-size: 12px;
-<<<<<<< HEAD
   color: #777;
   align-self: flex-end; /* 오른쪽 끝으로 이동 */
 }
@@ -223,13 +191,6 @@
   background-color: #FF68A5;   /* 공통 컬러 */
   border-radius: 8px;
   text-decoration: none;
-=======
-  color: #888;
-}
-
-.button {
-  background-color: hotpink;
->>>>>>> dev
   color: white;
   padding: 10px 20px;
   border-radius: 6px;

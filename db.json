@@ -36,7 +36,7 @@
       "content": "컴포넌트, props, state 개념을 요약했습니다.",
       "author": "최성",
       "date": "2025-09-15",
-      "views": 3
+      "views": 4
     },
     {
       "id": "2",
@@ -102,7 +102,7 @@
       "content": "ㄷㄷㄷㄷㄷㄷㄷ",
       "author": "장미랑",
       "date": "2025-09-15",
-      "views": 1,
+      "views": 4,
       "comments": [
         {
           "author": "장미랑",
@@ -122,7 +122,18 @@
       "content": "ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ",
       "author": "장미랑",
       "date": "2025-09-15",
-      "views": 1
+      "views": 2,
+      "comments": [
+        {
+          "author": "장미랑",
+          "text": "ㅇㅇㅇ",
+          "date": "2025-09-17"
+        }
+      ],
+      "likes": 1,
+      "likedUsers": [
+        "a639"
+      ]
     },
     {
       "id": "ccdd",
@@ -201,7 +212,8 @@
           "text": "첫 댓글 ",
           "date": "2025-09-15"
         }
-      ]
+      ],
+      "views": 1
     },
     {
       "id": "a3ac",
@@ -227,7 +239,8 @@
       "content": "ㅇㅇㅇㅇㅇ",
       "author": "장미랑",
       "date": "2025-09-15",
-      "createdAt": "2025-09-15T06:26:05.186Z"
+      "createdAt": "2025-09-15T06:26:05.186Z",
+      "views": 2
     },
     {
       "id": "28d7",
@@ -245,6 +258,40 @@
       "author": "장미랑",
       "date": "2025-09-15",
       "createdAt": "2025-09-15T06:35:50.264Z"
+    },
+    {
+      "id": "9312",
+      "title": "ㄹㄹ",
+      "url": "ㄹㄹ",
+      "content": "ㄹㄹㄹ",
+      "category": "클라우드",
+      "hashtags": [
+        "화창한",
+        "아니",
+        "어려운",
+        "데"
+      ],
+      "author": "장미랑",
+      "date": "2025-09-17",
+      "views": 2
+    },
+    {
+      "id": "9313",
+      "title": "ffddddddddddddd",
+      "url": "f",
+      "content": "fgfgdddddddddddddd",
+      "category": "기타",
+      "hashtags": [
+        "ddddd",
+        "dfdfdf"
+      ],
+      "author": "장미랑",
+      "date": "2025-09-17",
+      "views": 2,
+      "likes": 1,
+      "likedUsers": [
+        "a639"
+      ]
     }
   ]
 }
