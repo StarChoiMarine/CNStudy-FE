@@ -1,5 +1,5 @@
 // src/page/SignUpPage.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { http } from "../api/axios"; // 경로: src/page → src/api/axios.js
 import { Container, FormWrapper, Title, Input, Button, LinkText, FieldRow, Select  } from "../styles/common";
@@ -116,50 +116,53 @@ const SignUpPage = () => {
 
   return (
     <Container>
-      <FormWrapper as="form" style={{ display: "flex", flexDirection: "column", gap: "30px"}}>
+      <FormWrapper as="form" style={{ display: "flex", flexDirection: "column", gap: "2px"}}>
         <Title>회원가입</Title>
 
         <div className="name-group">
-        <label>이름</label>
+        <label style={{fontSize: "15px"}}>이름</label>
         <Input
           type="text"
           placeholder="이름을 입력해 주세요"
           value={name}
           onChange={(e) => setName(e.target.value)}
           style={{backgroundColor: "#F7F7FB", 
-                  height:"35px", 
+                  height:"15px", 
                   border: "none", 
-                  marginTop: "10px"}}
+                  marginTop: "5px",
+                  fontSize: "13px"}}
           required
         />
         </div>
 
         <div className="email-group">
-        <label>이메일</label>
+        <label style={{fontSize: "15px"}}>이메일</label>
         <Input
           type="email"
           placeholder="이메일을 입력해 주세요"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={{backgroundColor: "#F7F7FB", 
-                  height:"35px", 
+                  height:"15px", 
                   border: "none", 
-                  marginTop: "10px"}}
+                  marginTop: "10px",
+                  fontSize: "13px"}}
           required
         />
         </div>
 
         <div className="passwd-group" style = {{position: "relative", width: "100%"}}>
-        <label>비밀번호</label>
+        <label style={{fontSize: "15px"}}>비밀번호</label>
         <Input
           type={isShowPasswd ? "text" : "password"}
           placeholder="비밀번호를 입력해 주세요"
           value={passwd}
           onChange={(e) => setPasswd(e.target.value)}
           style={{backgroundColor: "#F7F7FB", 
-                  height:"35px", 
+                  height:"15px", 
                   border: "none", 
-                  marginTop: "10px"}}
+                  marginTop: "10px",
+                  fontSize: "13px"}}
           required
         />
         <button
@@ -168,8 +171,8 @@ const SignUpPage = () => {
           aria-label={isShowPasswd ? "비밀번호 숨기기" : "비밀번호 보기"}
           style={{
             position: "absolute",
-            right: 10,
-            top: "55%",
+            right: 8,
+            top: "58%",
             transform: "translateY(-50%)",
             background: "transparent",
             border: "none",
@@ -178,21 +181,22 @@ const SignUpPage = () => {
             lineHeight: 0, 
           }}
         >
-          {isShowPasswd ? <Eye /> : <EyeOff />}
+          {isShowPasswd ? <Eye size={16}/> : <EyeOff size={16}/>}
         </button>
         </div>
 
         <div className="checkpw-group" style = {{position: "relative", width: "100%"}}>
-        <label>비밀번호 확인</label>
+        <label style={{fontSize: "15px"}}>비밀번호 확인</label>
         <Input
           type="password"
           placeholder="비밀번호를 입력해 주세요"
           value={confirmPasswd}
           onChange={(e) => setConfirm(e.target.value)}
           style={{backgroundColor: "#F7F7FB", 
-                  height:"35px", 
+                  height:"15px", 
                   border: "none", 
-                  marginTop: "10px"}}
+                  marginTop: "10px",
+                  fontSize: "13px"}}
           required
         />
         <button
@@ -201,26 +205,26 @@ const SignUpPage = () => {
           aria-label={isShowPasswdCheck ? "비밀번호 숨기기" : "비밀번호 보기"}
           style={{
             position: "absolute",
-            right: 10,
-            top: "55%",
+            right: 8,
+            top: "58%",
             transform: "translateY(-50%)",
             background: "transparent",
             border: "none",
             cursor: "pointer",
             padding: 0,
-            lineHeight: 0, 
+            lineHeight: 0
           }}
         >
-          {isShowPasswdCheck ? <Eye /> : <EyeOff />}
+          {isShowPasswdCheck ? <Eye size={16}/> : <EyeOff size={16}/>}
         </button>
         </div>
 
         <div>
-          <label>생년월일</label>
+          <label style={{fontSize: "15px"}}>생년월일</label>
           <DateSelect value={birth} onChange={setBirth} />
         </div>
 
-        <Button type="button" onClick={handleSubmit} disabled={loading}>
+        <Button type="button" onClick={handleSubmit} disabled={loading} style={{fontSize: "15px"}}>
           {loading ? "처리 중..." : "가입하기"}
         </Button>
 
@@ -233,3 +237,4 @@ const SignUpPage = () => {
 };
 
 export default SignUpPage;
+
