@@ -34,6 +34,17 @@ const SummaryWritePage = () => {
       .filter((n) => Number.isFinite(n));
     const nextId = (numericIds.length ? Math.max(...numericIds) : 0) + 1;
 
+    await http.post("/summaries", {
+      id: String(nextId),
+      title,
+      url,
+      content,
+      category,
+      hashtags,
+      author: user?.name || "알 수 없음",
+      date: new Date().toISOString().split("T")[0],
+    });
+
     alert("글이 작성되었습니다!");
     navigate("/summary");
   };
@@ -56,6 +67,11 @@ const SummaryWritePage = () => {
       }
       setTagInput("");
     }
+  };
+
+  // ✅ 해시태그 삭제
+  const handleRemoveTag = (tag) => {
+    setHashtags(hashtags.filter((t) => t !== tag));
   };
 
   // ✅ AI 도움 (Mock)
@@ -288,7 +304,3 @@ const SummaryWritePage = () => {
 };
 
 export default SummaryWritePage;
-
-
-
-
