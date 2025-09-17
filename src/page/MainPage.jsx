@@ -5,7 +5,9 @@ import WeatherBackground from "../component/WeatherBackground";
 import WeatherPanel from "../component/WeatherPanel";
 import useJungguWeather from "../hook/useJungguWeather";
 import LeaderBoard from "../component/LeaderBoard";
-// import MiniCalendar from "../component/MiniCalendar";
+import MainPageCalendar from "../component/MainPageCalendar";
+import CalendarModal from "../component/CalendarModal";
+import { useState } from "react";
 
 
 const Page = styled.div`
@@ -57,6 +59,15 @@ export default function MainPage() {
   const isDay = weather?.isDay;
   const condition = weather?.condition;
 
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  function handleSelectDate(dateISO) {
+    setSelectedDate(dateISO);
+    setOpen(true);
+  }
+
+
   return (
     <Page>
       <Header />
@@ -86,8 +97,18 @@ export default function MainPage() {
         {/* 우측: 일단 비워둠 (추후 운세/캘린더) */}
         <Right>
           <SmallCard>운세 받아와서 로드하기</SmallCard>
+          <MainPageCalendar 
+          onSelectDate={handleSelectDate} 
+          selectedDate={selectedDate}
+          />
+          <CalendarModal
+            open={open}
+            selectedDate={selectedDate}
+            onClose={() => setOpen(false)}
+          />
         </Right>
       </Layout>
     </Page>
 );
 }
+
