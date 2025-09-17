@@ -20,99 +20,132 @@ const SummaryWritePage = () => {
   const [content, setContent] = useState("");
   const navigate = useNavigate();
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!title || !content) return alert("제목과 강의 내용을 입력하세요!");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const user = JSON.parse(localStorage.getItem("user"));
+    if (!title || !author || !content) {
+      alert("모든 항목을 입력하세요!");
+      return;
+    }
 
-  // 1) 현재 summaries 불러와서 숫자 id의 최댓값 계산
-  const { data: all } = await http.get("/summaries");
-  const numericIds = all
-    .map(x => Number(x.id))
-    .filter(n => Number.isFinite(n));
-  const nextId = (numericIds.length ? Math.max(...numericIds) : 0) + 1;
-
-  await http.post("/summaries", {
-  id: String(nextId),   // ✅ 숫자를 문자열로 변환해서 저장
-  title,
-  url,
-  content,
-  author: user?.name || "알 수 없음",
-  date: new Date().toISOString().split("T")[0],
-});
-
+    try {
+      await http.post("/summaries", {
+        title,
+        author,
+        content,
+        date: new Date().toISOString().split("T")[0],
+      });
 
   alert("글이 작성되었습니다!");
   navigate("/summary");
 };
 
   return (
-     <>
-      <Header /> {/* ✅ 여기서 헤더 추가 */}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "#f9f9f9",
+      }}
+    >
+     <form
+  onSubmit={handleSubmit}
+  style={{
+    width: "700px",
+    padding: "30px",
+    backgroundColor: "white",
+    borderRadius: "8px",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+  }}
+>
+  <h2 style={{ textAlign: "center", marginBottom: "30px", fontFamily: "monospace" }}>
+    Lecture Note Writing
+  </h2>
 
-    <Container>
-      <FormWrapper>
-        <Title>Lecture Note Writing</Title>
+  {/* 제목 */}
+  <div style={{ display: "flex", alignItems: "center", marginBottom: "15px" }}>
+    <label style={{ width: "100px", fontWeight: "bold" }}>제 목</label>
+    <input
+      type="text"
+      value={title}
+      onChange={(e) => setTitle(e.target.value)}
+      placeholder="제목을 입력해주세요."
+      style={{
+        flex: 1,
+        padding: "8px",
+        border: "1px solid #ddd",
+        borderRadius: "4px",
+      }}
+    />
+  </div>
 
-        {/* 제목 */}
-        <div style={{ marginBottom: "15px" }}>
-          <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>
-            제 목
-          </label>
-          <Input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="제목을 입력해주세요."
-          />
-        </div>
+  {/* URL */}
+  <div style={{ display: "flex", alignItems: "center", marginBottom: "15px" }}>
+    <label style={{ width: "100px", fontWeight: "bold" }}>URL</label>
+    <input
+      type="text"
+      placeholder="강의 내용과 관련된 링크를 첨부할 수 있습니다."
+      style={{
+        flex: 1,
+        padding: "8px",
+        border: "1px solid #ddd",
+        borderRadius: "4px",
+      }}
+    />
+  </div>
 
-        {/* URL */}
-        <div style={{ marginBottom: "15px" }}>
-          <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>
-            URL
-          </label>
-          <Input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="강의 내용과 관련된 링크를 첨부할 수 있습니다."
-          />
-        </div>
+  {/* 내용 */}
+  <div style={{ marginBottom: "15px" }}>
+    <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>
+      강의 내용
+    </label>
+    <textarea
+      value={content}
+      onChange={(e) => setContent(e.target.value)}
+      placeholder="학습한 내용을 입력해주세요."
+      rows="6"
+      style={{
+        width: "100%",
+        padding: "10px",
+        border: "1px solid #ddd",
+        borderRadius: "4px",
+      }}
+    />
+  </div>
 
-        {/* 내용 */}
-        <div style={{ marginBottom: "15px" }}>
-          <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>
-            강의 내용
-          </label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="학습한 내용을 입력해주세요."
-            rows="8"
-            style={{
-              width: "100%",
-              padding: "12px",
-              border: "1px solid #ccc",
-              borderRadius: "6px",
-              fontSize: "16px",
-            }}
-          />
-        </div>
-
-        {/* 버튼 */}
-        <div style={{ display: "flex", gap: "10px" }}>
-          <Button type="button" onClick={() => navigate("/summary")}>
-            목록보기
-          </Button>
-          <Button type="submit" onClick={handleSubmit}>
-            글 작성
-          </Button>
-        </div>
-      </FormWrapper>
-    </Container>
-  </>
+  {/* 버튼 */}
+  <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+    <button
+      type="button"
+      onClick={() => navigate("/summary")}
+      style={{
+        padding: "8px 16px",
+        backgroundColor: "#ddd",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer",
+      }}
+    >
+      목록보기
+    </button>
+    <button
+      type="submit"
+      style={{
+        padding: "8px 16px",
+        backgroundColor: "black",
+        color: "white",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer",
+      }}
+    >
+      글 작성
+    </button>
+  </div>
+</form>
+    </div>
   );
 };
 
