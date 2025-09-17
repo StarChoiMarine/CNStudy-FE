@@ -1,0 +1,253 @@
+{
+  "users": [
+    {
+      "id": "b4eb",
+      "name": "최성",
+      "birth": "2025-09-19",
+      "email": "aaa",
+      "passwd": "111"
+    },
+    {
+      "id": "b268",
+      "name": "ㅇ",
+      "birth": "2025-09-11",
+      "email": "d",
+      "passwd": "d"
+    },
+    {
+      "id": "a639",
+      "name": "장미랑",
+      "birth": "1997-06-04",
+      "email": "vpdtn0604@gmail.com",
+      "passwd": "aa1234**"
+    },
+    {
+      "id": "e024",
+      "name": "ㅇㅇ",
+      "birth": "2025-09-04",
+      "email": "ddd",
+      "passwd": "ddd"
+    }
+  ],
+  "summaries": [
+    {
+      "id": "1",
+      "title": "리액트 기초 정리",
+      "content": "컴포넌트, props, state 개념을 요약했습니다.",
+      "author": "최성",
+      "date": "2025-09-15"
+    },
+
+    {
+      "id": "2",
+      "title": "자바스크립트 비동기",
+      "content": "Promise와 async/await 동작 방식을 정리했습니다.",
+      "author": "홍길동",
+      "date": "2025-09-15",
+      "likes": 9,
+      "comments": [
+        {
+          "author": "장미랑",
+          "text": "ㅇㅇㅇㅇㅇ",
+          "date": "2025-09-15"
+        },
+        {
+          "author": "장미랑",
+          "text": "ㅇㅇㅇㅇ",
+          "date": "2025-09-15"
+        },
+        {
+          "author": "장미랑",
+          "text": "ㅇㅇㅇㅇ",
+          "date": "2025-09-15"
+        }
+      ],
+      "likedUsers": [],
+      "views": 2
+    },
+    {
+      "id": "0172",
+      "title": "sss",
+      "author": "ㄴㄴ",
+      "content": "ssssㄴㄴㄴ",
+      "date": "2025-09-15"
+    },
+    {
+      "id": "3973",
+      "title": "ㄴ",
+      "author": "ㄴ",
+      "content": "ㄴ",
+      "date": "2025-09-15"
+    },
+    {
+      "id": "3148",
+      "title": "ㅇㅇㅇ",
+      "url": "ㅇㅇㅇ",
+      "content": "ㅇㅇㅇㅇ",
+      "author": "장미랑",
+      "date": "2025-09-15"
+    },
+    {
+      "id": "f5fd",
+      "title": "ㅇㅇㅇㅇ",
+      "url": "ㅇㅇㅇ",
+      "content": "ㅇㅇㅇㅇ",
+      "author": "장미랑",
+      "date": "2025-09-15"
+    },
+    {
+      "id": "6974",
+      "title": "테스트임",
+      "url": "완전 ",
+      "content": "ㄷㄷㄷㄷㄷㄷㄷ",
+      "author": "장미랑",
+      "date": "2025-09-15",
+
+      "comments": [
+        {
+          "author": "장미랑",
+          "text": "ㅇㅇㅇ",
+          "date": "2025-09-15"
+        }
+      ],
+      "likes": 1,
+      "likedUsers": [
+        "a639"
+      ]
+    },
+    {
+      "id": "9311",
+      "title": "ㅇㅇ",
+      "url": "ㅇㅇㅇ",
+      "content": "ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ",
+      "author": "장미랑",
+      "date": "2025-09-15"
+
+    },
+    {
+      "id": "ccdd",
+      "title": "ㅇㅇㅇ",
+      "url": "ㅇㅇㅇ",
+      "content": "ㅇㅇㅇ",
+      "author": "장미랑",
+      "date": "2025-09-15",
+      "views": 2,
+      "comments": [
+        {
+          "author": "장미랑",
+          "text": "ㅇㅇㅇㅇㅇㅇ",
+          "date": "2025-09-15"
+        },
+        {
+          "author": "장미랑",
+          "text": "ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ",
+          "date": "2025-09-15"
+        }
+      ],
+      "likes": 1,
+      "likedUsers": [
+        "a639"
+      ]
+    },
+    {
+      "id": "056d",
+      "title": "ㄴㄴㄴ",
+      "url": "ㄴㄴㄴ",
+      "content": "ㄴㄴㄴ",
+      "author": "장미랑",
+      "date": "2025-09-15",
+      "comments": [
+        {
+          "author": "장미랑",
+          "text": "ㅇㅇㅇㅇ",
+          "date": "2025-09-15"
+        },
+        {
+          "author": "장미랑",
+          "text": "ㅇㅇㅇㅇ",
+          "date": "2025-09-15"
+        },
+        {
+          "author": "장미랑",
+          "text": "ㅇㅇㅇ",
+          "date": "2025-09-15"
+        }
+      ],
+      "likes": 1,
+      "likedUsers": [
+        "a639"
+      ],
+      "views": 2
+    },
+    {
+      "id": "d428",
+      "title": "ㅇㅇㅇ",
+      "url": "ㅇㅇ",
+      "content": "ㅇㅇㅇㅇㅇ",
+      "author": "장미랑",
+      "date": "2025-09-15",
+      "likes": 16,
+      "likedUsers": [
+        "a639"
+      ],
+      "comments": [
+        {
+          "author": "장미랑",
+          "text": "ㅇㅇㅇㅇㅇㅇ",
+          "date": "2025-09-15"
+        },
+        {
+          "author": "장미랑",
+          "text": "첫 댓글 ",
+          "date": "2025-09-15"
+        }
+    ]
+
+    },
+
+    {
+      "id": "a3ac",
+      "title": "하루",
+      "url": "하라라라",
+      "content": "ㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈ",
+      "author": "장미랑",
+      "date": "2025-09-15",
+      "views": 1
+    },
+    {
+      "id": "ac1c",
+      "title": "ㅇㅇㅇ",
+      "url": "ㅇㅇㅇ",
+      "content": "ㅇㅇㅇㅇ",
+      "author": "장미랑",
+      "date": "2025-09-15"
+    },
+    {
+      "id": "dbf6",
+      "title": "ㅇㅇㅇ",
+      "url": "ㅇㅇㅇ",
+      "content": "ㅇㅇㅇㅇㅇ",
+      "author": "장미랑",
+      "date": "2025-09-15"
+
+    },
+    {
+      "id": "28d7",
+      "title": "ㅇㅇ",
+      "url": "ㅇㅇ",
+      "content": "ㅇㅇㅇ",
+      "author": "장미랑",
+      "date": "2025-09-15"
+    },
+    {
+      "id": "fdb4",
+      "title": "ㅂㅂㅂ",
+      "url": "ㅇ",
+      "content": "ㅂㅂㅂㅂ",
+      "author": "장미랑",
+      "date": "2025-09-15",
+      "createdAt": "2025-09-15T06:35:50.264Z"
+
+    }
+  ]
+}
