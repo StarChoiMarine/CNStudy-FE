@@ -175,13 +175,12 @@
 /* } */
 
 .commentDate {
-  position: absolute;
-  right: 10px;
-  bottom: 8px;
   font-size: 12px;
   color: #777;
-  align-self: flex-end; /* 오른쪽 끝으로 이동 */
+  margin-left: 10px;
 }
+  /* align-self: flex-end; /* 오른쪽 끝으로 이동 */
+ */
 
 
 /* 목록으로 돌아가기 버튼 */
