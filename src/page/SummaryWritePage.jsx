@@ -1,4 +1,3 @@
-// src/page/SummaryWritePage.jsx
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -305,7 +304,3 @@ const SummaryWritePage = () => {
 };
 
 export default SummaryWritePage;
-
-
-
-
