@@ -7,7 +7,7 @@ import ScheduleDetailsImg from "../styles/images/ScheduleDetailsImg.png";
 import TodoListImg from "../styles/images/TodoListImg.png";
 import { schedules } from "../data/schedules"
 import  Eclipse  from "../styles/images/Ellipse.png"
-
+import TodoList from "../component/TodoList";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -96,6 +96,15 @@ const DetailsContent = styled.div`
   }
 `;
 
+const TodoBox = styled.ul`
+    min-height: 0;    
+    overflow: auto;   
+    padding-top: 20px;
+    margin: 0;
+    padding-left: 30px;   
+    list-style: none;  
+`;
+
 
 export default function SchedulePage() {
     const [selectedDate, setSelectedDate] = useState(null);
@@ -110,7 +119,6 @@ export default function SchedulePage() {
             <ScheduleCalendar onSelectDate={setSelectedDate}
                             selectedDate={selectedDate}/>
           </CalendarCol>
-          
           <Details>
             <Title>Schedule Details</Title>
             <DetailsImg1>
@@ -135,9 +143,12 @@ export default function SchedulePage() {
                     )}
                 </DetailsContent>
             </DetailsImg1>
-
             <Title>Todo List</Title>
-            <DetailsImg2 />
+            <DetailsImg2>
+                <TodoBox>
+                  <TodoList mode="date" dateISO={selectedDate} />
+                </TodoBox>
+            </DetailsImg2>
           </Details>
         </Grid>
       </Wrapper>
