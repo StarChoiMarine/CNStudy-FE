@@ -22,6 +22,10 @@ export default function AppRoutes() {
 
       <Route path="/schedule" element={<SchedulePage />} />
 
+      <Route path="/mypage" element={<MyPage />} />
+      <Route path="/mypage/edit" element={<MyPageEdit />} />
+
+
     </Routes>
   );
 }
