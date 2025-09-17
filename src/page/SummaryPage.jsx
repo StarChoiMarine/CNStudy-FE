@@ -229,11 +229,3 @@ const SummaryPage = () => {
             >
               {">"}
             </button>
-          </div>
-        </FormWrapper>
-      </Container>
-    </>
-  );
-};
-
-export default SummaryPage;
