@@ -2,22 +2,31 @@ import { useEffect} from "react";
 import styled from "styled-components";
 import { schedules } from "../data/schedules"
 import calendarModal from "../styles/images/calendarModal.png"
-import  Eclipse  from "../styles/images/Ellipse.png"
-
+import  orangeEclipse  from "../styles/images/orangeEllipse.png"
+import TodoList from "./TodoList";
 
 const List = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
 `;
 
 const ListItem = styled.li`
-  display: grid;
-  grid-template-columns: 14px 1fr;
-  align-items: start;
-  gap: 8px;
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    align-items: start;
+    gap: 8px;
+`;
+
+const TodoBox = styled.ul`
+    min-height: 0;    
+    overflow: auto;   
+    padding-top: 240px;
+    margin: 0;
+    padding-left: 10px;   
+    list-style: none;  
 `;
 
 const Dot = styled.i`
@@ -95,7 +104,7 @@ export default function CalendarModal({ open, selectedDate, onClose }) {
           <List>
             {items.map((ev, idx) => (
               <ListItem key={ev.id ?? `${ev.title}-${idx}`}>
-                <Dot style={{ backgroundImage: `url(${Eclipse})` }} />
+                <Dot style={{ backgroundImage: `url(${orangeEclipse})` }} />
                 <span>{ev.title}</span>
               </ListItem>
             ))}
@@ -103,6 +112,9 @@ export default function CalendarModal({ open, selectedDate, onClose }) {
         ) : (
           <Empty>일정이 없습니다.</Empty>
         )}
+        <TodoBox>
+        <TodoList compact />
+        </TodoBox>
       </Panel>
     </Backdrop>
   );
