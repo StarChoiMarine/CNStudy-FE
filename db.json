@@ -27,6 +27,13 @@
       "birth": "2025-09-04",
       "email": "ddd",
       "passwd": "ddd"
+    },
+    {
+      "id": "1503",
+      "name": "필포든",
+      "birth": "2025-01-01",
+      "email": "ccc",
+      "passwd": "ccc"
     }
   ],
   "summaries": [
@@ -37,14 +44,13 @@
       "author": "최성",
       "date": "2025-09-15"
     },
-
     {
       "id": "2",
       "title": "자바스크립트 비동기",
       "content": "Promise와 async/await 동작 방식을 정리했습니다.",
       "author": "홍길동",
       "date": "2025-09-15",
-      "likes": 9,
+      "likes": 10,
       "comments": [
         {
           "author": "장미랑",
@@ -62,8 +68,10 @@
           "date": "2025-09-15"
         }
       ],
-      "likedUsers": [],
-      "views": 2
+      "likedUsers": [
+        "1503"
+      ],
+      "views": 3
     },
     {
       "id": "0172",
@@ -77,7 +85,8 @@
       "title": "ㄴ",
       "author": "ㄴ",
       "content": "ㄴ",
-      "date": "2025-09-15"
+      "date": "2025-09-15",
+      "views": 1
     },
     {
       "id": "3148",
@@ -93,7 +102,12 @@
       "url": "ㅇㅇㅇ",
       "content": "ㅇㅇㅇㅇ",
       "author": "장미랑",
-      "date": "2025-09-15"
+      "date": "2025-09-15",
+      "views": 1,
+      "likes": 1,
+      "likedUsers": [
+        "1503"
+      ]
     },
     {
       "id": "6974",
@@ -102,7 +116,6 @@
       "content": "ㄷㄷㄷㄷㄷㄷㄷ",
       "author": "장미랑",
       "date": "2025-09-15",
-
       "comments": [
         {
           "author": "장미랑",
@@ -113,7 +126,8 @@
       "likes": 1,
       "likedUsers": [
         "a639"
-      ]
+      ],
+      "views": 1
     },
     {
       "id": "9311",
@@ -122,7 +136,6 @@
       "content": "ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ",
       "author": "장미랑",
       "date": "2025-09-15"
-
     },
     {
       "id": "ccdd",
@@ -201,10 +214,8 @@
           "text": "첫 댓글 ",
           "date": "2025-09-15"
         }
-    ]
-
+      ]
     },
-
     {
       "id": "a3ac",
       "title": "하루",
@@ -229,7 +240,6 @@
       "content": "ㅇㅇㅇㅇㅇ",
       "author": "장미랑",
       "date": "2025-09-15"
-
     },
     {
       "id": "28d7",
@@ -247,7 +257,23 @@
       "author": "장미랑",
       "date": "2025-09-15",
       "createdAt": "2025-09-15T06:35:50.264Z"
-
+    },
+    {
+      "id": "9312",
+      "title": "2등으로",
+      "url": "ㅇㅇ",
+      "content": "ㅇㅇㅇㅇ",
+      "category": "클라우드",
+      "hashtags": [
+        "축구"
+      ],
+      "author": "필포든",
+      "date": "2025-09-17",
+      "views": 2,
+      "likes": 1,
+      "likedUsers": [
+        "1503"
+      ]
     }
   ]
 }
