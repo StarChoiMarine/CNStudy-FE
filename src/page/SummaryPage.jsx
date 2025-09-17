@@ -1,203 +1,239 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+// src/page/SummaryPage.jsx
+import React, { useEffect, useMemo, useState } from "react";
 import { http } from "../api/axios";
-import "../styles/SummaryDetailPage.css";
+import { Link, useLocation } from "react-router-dom";
 import Header from "../component/Header";
 
+// ✅ 공통 스타일 불러오기
+import { Container, FormWrapper, Title, Button, Input } from "../styles/common";
 
+const SummaryPage = () => {
+  const [summaries, setSummaries] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 10;
+  const [category, setCategory] = useState("전체");
+  const location = useLocation();
 
-const SummaryDetailPage = () => {
-  const { id } = useParams(); 
-  const [summary, setSummary] = useState(null);
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
+  // 🔍 검색 상태
+  const [query, setQuery] = useState("");
+  const [scope, setScope] = useState("all"); // all | title | author | content
 
   useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const { data } = await http.get(`/summaries/${id}`);
+    const fetchData = async () => {
+      try {
+        const { data } = await http.get("/summaries");
 
-      // 조회수 증가
-      const updatedViews = (data.views || 0) + 1;
-      setSummary({ ...data, views: updatedViews });
+        // id 기준 내림차순 정렬
+        const toNum = (v) => {
+          const n = Number(v);
+          return Number.isFinite(n) ? n : -Infinity;
+        };
+        let sorted = [...data].sort((a, b) => toNum(b.id) - toNum(a.id));
 
-      // 서버에 반영
-      await http.patch(`/summaries/${id}`, { views: updatedViews });
+        // ✅ 쿼리파라미터(tag) 확인해서 해시태그 필터링
+        const params = new URLSearchParams(location.search);
+        const tag = params.get("tag");
+        if (tag) {
+          sorted = sorted.filter((s) => s.hashtags?.includes(tag));
+        }
 
-      setComments(data.comments || []);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  fetchData();
-}, [id]);
+        setSummaries(sorted);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchData();
+  }, [location.search]);
 
-  const handleAddComment = () => {
-    if (!newComment.trim()) return;
+  // 🔍 검색 필터링
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return summaries;
 
-    const user = JSON.parse(localStorage.getItem("user")) || { name: "익명" };
+    return summaries.filter((s) => {
+      const inTitle = (s.title || "").toLowerCase().includes(q);
+      const inAuthor = (s.author || "").toLowerCase().includes(q);
+      const inContent = (s.content || "").toLowerCase().includes(q);
 
-    const updated = [
-      ...comments,
-      {
-        author: user.name,
-        text: newComment,
-        date: new Date().toISOString().split("T")[0],
-      },
-    ];
-    setComments(updated);
-    setNewComment("");
+      if (scope === "title") return inTitle;
+      if (scope === "author") return inAuthor;
+      if (scope === "content") return inContent;
+      return inTitle || inAuthor || inContent;
+    });
+  }, [summaries, query, scope]);
 
-    // 서버 저장 필요시 PATCH/POST
-    http.patch(`/summaries/${id}`, { comments: updated }).catch((err) =>
-      console.error("댓글 저장 실패:", err)
-    );
-  };
+  // 검색 조건 바뀌면 1페이지로
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [query, scope]);
 
-  if (!summary) return <p>로딩 중...</p>;
+  const indexOfLast = currentPage * postsPerPage;
+  const indexOfFirst = indexOfLast - postsPerPage;
+  const currentSummaries = filtered.slice(indexOfFirst, indexOfLast);
+
+  const totalPages = Math.ceil(filtered.length / postsPerPage) || 1;
 
   return (
-     <>
-      <Header /> {/* ✅ 여기서 헤더 추가 */}
+    <>
+      <Header />
 
-    <div className="container">
-      <h2 className="title">Lecture Note</h2>
+      <Container style={{ alignItems: "flex-start", paddingTop: "40px" }}>
+        <FormWrapper style={{ width: "1000px", maxWidth: "100%" }}>
+          <Title>강의 내용 게시판</Title>
 
-      {/* 글 정보 테이블 */}
-       <table className="table">
-        <tbody>
-          <tr>
-          <td><strong>제목</strong></td>
-          <td colSpan="7">{summary.title}</td>
-        </tr>
-        <tr>
-          <td><strong>URL</strong></td>
-          <td colSpan="7">
-            <a href={summary.url} target="_blank" rel="noreferrer">
-              {summary.url}
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td><strong>작성자</strong></td>
-          <td>{summary.author}</td>
-          <td><strong>작성일</strong></td>
-          <td>{summary.date}</td>
-          <td><strong>카테고리</strong></td>
-          <td>{summary.category || "기타"}</td>
-          <td><strong>조회수</strong></td>
-          <td>{summary.views || 0}</td>
-        </tr>
-
-        </tbody>
-      </table>
-
-
-
-  {/* 본문 */}
-      <div className="contentBox">{summary.content}</div>
-
-  {/* 좋아요 버튼 */}
-      <button
-  className="likeButton"
-  onClick={() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) {
-      alert("로그인 후 좋아요 가능합니다!");
-      return;
-    }
-
-    const alreadyLiked = summary.likedUsers?.includes(user.id);
-
-    let updatedLikes;
-    let updatedUsers;
-
-    if (alreadyLiked) {
-      // 좋아요 취소
-      updatedLikes = (summary.likes || 0) - 1;
-      updatedUsers = summary.likedUsers.filter(uid => uid !== user.id);
-    } else {
-      // 좋아요 추가
-      updatedLikes = (summary.likes || 0) + 1;
-      updatedUsers = [...(summary.likedUsers || []), user.id];
-    }
-
-    // 프론트 반영
-    setSummary({ ...summary, likes: updatedLikes, likedUsers: updatedUsers });
-
-    // 서버 반영
-    http.patch(`/summaries/${id}`, { 
-      likes: updatedLikes,
-      likedUsers: updatedUsers
-    }).catch(err => console.error("좋아요 저장 실패:", err));
-  }}
->
-  ❤️ {summary.likes || 0}
-</button>
-
-
-  {/* 댓글 입력 */}
-      <div className="commentBox">
-        <textarea
-          rows="3"
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          className="commentInput"
-          placeholder="댓글을 입력하세요"
-        />
-        <button onClick={handleAddComment} className="commentButton">
-          등록
-        </button>
-      </div>
-
-  {/* 댓글 목록 */}
-      <div>
-        <h4 className="commentTitle">댓글</h4>
-        {comments.length === 0 ? (
-          <p>댓글이 없습니다.</p>
-        ) : (
-          comments.map((c, i) => (
-            <div key={i} className="commentItem">
-              <p className="commentAuthor">{c.author || "익명"}</p>
-
-                  <div className="commentRow">
-              <p className="commentText">{c.text}</p>
-              <span className="commentDate">{c.date}</span>
-            </div>
-            </div>
-          ))
-        )}
-      </div>
-
-   {/* 목록 버튼 */}
-      <div style={{ marginTop: "30px" ,  textAlign: "right"}}>
-        <Link to="/summary" className="button">
-          목록보기
-        </Link>
-      </div>
-
- {/* 해시태그 */}
- 
-      <div style={{ marginTop: "15px" }}>
-        {summary.hashtags?.map((tag, idx) => (
-          <Link 
-            key={idx} 
-            to={`/summary?tag=${encodeURIComponent(tag)}`} 
+          {/* 🔍 검색 바 */}
+          <div
             style={{
-              marginRight: "8px",
-              color: "#007BFF",
-              textDecoration: "none",
-              fontWeight: "bold"
+              display: "flex",
+              gap: 8,
+              justifyContent: "flex-end",
+              alignItems: "center",
+              marginBottom: 12,
             }}
           >
-            #{tag}
-          </Link>
-        ))}
-      </div>
+            <select
+              value={scope}
+              onChange={(e) => setScope(e.target.value)}
+              style={{
+                height: 36,
+                padding: "0 10px",
+                border: "1px solid #ddd",
+                borderRadius: 8,
+                background: "#fff",
+              }}
+            >
+              <option value="all">전체</option>
+              <option value="title">제목</option>
+              <option value="author">작성자</option>
+              <option value="content">내용</option>
+            </select>
 
-    </div>
-   </>
+            <div style={{ position: "relative" }}>
+              <Input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="검색어를 입력하세요"
+                style={{ width: 240, paddingRight: 34 }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  right: 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  opacity: 0.5,
+                  fontSize: 14,
+                }}
+              >
+                🔍
+              </span>
+            </div>
+          </div>
+
+          {/* 목록 테이블 */}
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              marginBottom: "20px",
+            }}
+          >
+            <thead>
+              <tr style={{ borderBottom: "2px solid #ddd" }}>
+                <th style={{ padding: "10px" }}>번호</th>
+                <th style={{ padding: "10px" }}>제목</th>
+                <th style={{ padding: "10px" }}>작성자</th>
+                <th style={{ padding: "10px" }}>날짜</th>
+                <th style={{ padding: "10px" }}>카테고리</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {currentSummaries.length === 0 ? (
+                <tr>
+                  <td colSpan={5} style={{ textAlign: "center", padding: 24 }}>
+                    검색 결과가 없습니다.
+                  </td>
+                </tr>
+              ) : (
+                currentSummaries.map((s, index) => (
+                  <tr key={s.id} style={{ borderBottom: "1px solid #eee" }}>
+                    <td style={{ textAlign: "center", padding: "8px" }}>
+                      {filtered.length -
+                        ((currentPage - 1) * postsPerPage + index)}
+                    </td>
+                    <td style={{ textAlign: "center", padding: "8px" }}>
+                      <Link to={`/summary/${s.id}`} style={{ color: "#333" }}>
+                        {s.title}
+                      </Link>
+                    </td>
+                    <td style={{ textAlign: "center", padding: "8px" }}>
+                      {s.author}
+                    </td>
+                    <td style={{ textAlign: "center", padding: "8px" }}>
+                      {s.date}
+                    </td>
+                    <td style={{ textAlign: "center", padding: "8px" }}>
+                      {s.category || "기타"}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+
+          {/* 글 작성 버튼 */}
+          <div style={{ textAlign: "right" }}>
+            <Link to="/summary/write">
+              <Button style={{ width: "auto", padding: "8px 16px" }}>
+                글 작성
+              </Button>
+            </Link>
+          </div>
+
+          {/* 페이지네이션 */}
+          <div style={{ textAlign: "center", marginTop: "20px" }}>
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+              style={{ margin: "0 5px" }}
+            >
+              {"<"}
+            </button>
+
+            {[...Array(totalPages)].map((_, idx) => (
+              <button
+                key={idx + 1}
+                onClick={() => setCurrentPage(idx + 1)}
+                style={{
+                  margin: "0 5px",
+                  fontWeight: currentPage === idx + 1 ? "bold" : "normal",
+                  color: currentPage === idx + 1 ? "white" : "black",
+                  backgroundColor:
+                    currentPage === idx + 1 ? "#FF68A5" : "transparent",
+                  border: "1px solid #ddd",
+                  borderRadius: "3px",
+                  padding: "5px 10px",
+                }}
+              >
+                {idx + 1}
+              </button>
+            ))}
+
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              style={{ margin: "0 5px" }}
+            >
+              {">"}
+            </button>
+          </div>
+        </FormWrapper>
+      </Container>
+    </>
   );
 };
 
-export default SummaryDetailPage;
+export default SummaryPage;
