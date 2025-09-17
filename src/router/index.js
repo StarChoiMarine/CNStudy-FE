@@ -8,7 +8,8 @@ import SummaryWritePage from "../page/SummaryWritePage";
 import SchedulePage from "../page/SchedulePage";
 import MyPage from "../page/MyPage";
 import MyPageEdit from "../page/MyPageEdit";
-
+import MyPostsPage from "../page/MyPostsPage";
+import MyLikesPage from "../page/MyLikesPage";
 
 export default function AppRoutes() {
   return (
@@ -24,8 +25,8 @@ export default function AppRoutes() {
       <Route path="/schedule" element={<SchedulePage />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/mypage/edit" element={<MyPageEdit />} />
-      
-
+      <Route path="/mypage/posts" element={<MyPostsPage />} />
+      <Route path="/mypage/likes" element={<MyLikesPage />} />
     </Routes>
   );
 }

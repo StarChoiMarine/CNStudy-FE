@@ -1,7 +1,6 @@
 // src/page/MyPageEdit.jsx
 import React, { useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import Header from "../component/Header";
 import MyPageLayout from "../component/MyPageLayout";
 import { http } from "../api/axios";
 import {
@@ -147,8 +146,7 @@ export default function MyPageEdit() {
 
   return (
     <>
-      <Header />
-      <Container>
+      <MyPageLayout>
         <FormWrapper as="form" onSubmit={submit} style={{ width: 520 }}>
           <Title>회원정보 수정</Title>
 
@@ -266,7 +264,7 @@ export default function MyPageEdit() {
             <Link to="/mypage">돌아가기</Link>
           </LinkText>
         </FormWrapper>
-      </Container>
+      </MyPageLayout>
     </>
   );
 }
