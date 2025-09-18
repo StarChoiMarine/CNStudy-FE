@@ -9,7 +9,7 @@ export default function ScheduleCalendar ({onSelectDate, selectedDate}) {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
-    const firstDayOfMonth = new Date(year, month, 1); // 일요일:0, 월요일:1..
+    const firstDayOfMonth = new Date(year, month, 1); 
     const startDay = new Date(firstDayOfMonth);
     startDay.setDate(1 - firstDayOfMonth.getDay());
 
@@ -199,7 +199,6 @@ export default function ScheduleCalendar ({onSelectDate, selectedDate}) {
                             fontSize: "clamp(8px, 1vw, 10px)",
                             fontWeight: "bold",
                             padding: "0 clamp(2px, 0.5vw, 4px)",
-                            //borderRadius: 6,
                             background: "#ffbc864a",
                             whiteSpace: "nowrap",
                             overflow: "hidden",

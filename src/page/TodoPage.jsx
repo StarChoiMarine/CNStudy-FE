@@ -1,4 +1,3 @@
-// src/pages/TodoPage.jsx
 import TodoList from "../components/TodoList";
 
 export default function TodoPage() {

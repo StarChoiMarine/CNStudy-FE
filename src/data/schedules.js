@@ -271,7 +271,6 @@ export const schedules = {
 
 };
 
-// Date 객체 → YYYY-MM-DD 문자열
 export const toISODate = (d) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
     d.getDate()
