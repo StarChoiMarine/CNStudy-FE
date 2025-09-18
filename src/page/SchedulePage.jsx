@@ -1,5 +1,4 @@
-// SchedulePage.jsx
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import styled from "styled-components";
 import Header from "../component/Header";
 import ScheduleCalendar from "./ScheduleCalendar";
@@ -105,25 +104,34 @@ const TodoBox = styled.ul`
     list-style: none;  
 `;
 
+const toLocalISODate = (d = new Date()) => {
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off * 60000).toISOString().slice(0, 10);
+};
 
 export default function SchedulePage() {
-    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(toLocalISODate()); 
+    const selectedISO = useMemo(() => selectedDate, [selectedDate]);
 
-    const items = selectedDate ? schedules[selectedDate] ?? [] : [];
+    const items = selectedISO ? schedules[selectedISO] ?? [] : [];
   return (
     <div>
       <Header />
       <Wrapper>
         <Grid>
           <CalendarCol>
-            <ScheduleCalendar onSelectDate={setSelectedDate}
-                            selectedDate={selectedDate}/>
+            <ScheduleCalendar
+              onSelectDate={(d) =>
+                setSelectedDate(typeof d === "string" ? d.slice(0,10) : toLocalISODate(new Date(d)))
+              }
+              selectedDate={selectedISO}
+            />
           </CalendarCol>
           <Details>
             <Title>Schedule Details</Title>
             <DetailsImg1>
                 <DetailsContent>
-                    {selectedDate ? (
+                    {selectedISO ? (
                         items.length ? (
                         <ul style={{ listStylePosition: "inside", padding: 0, margin: 0 }}>
                             {items.map(ev => (
@@ -146,7 +154,7 @@ export default function SchedulePage() {
             <Title>Todo List</Title>
             <DetailsImg2>
                 <TodoBox>
-                  <TodoList mode="date" dateISO={selectedDate} />
+                  <TodoList key={selectedISO} mode="date" dateISO={selectedISO} />
                 </TodoBox>
             </DetailsImg2>
           </Details>
