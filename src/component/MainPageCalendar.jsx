@@ -10,7 +10,7 @@ export default function MainPageCalendar ({onSelectDate, selectedDate}) {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
-    const firstDayOfMonth = new Date(year, month, 1); // 일요일:0, 월요일:1..
+    const firstDayOfMonth = new Date(year, month, 1);
     const startDay = new Date(firstDayOfMonth);
     startDay.setDate(1 - firstDayOfMonth.getDay());
 
@@ -173,7 +173,6 @@ export default function MainPageCalendar ({onSelectDate, selectedDate}) {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        //borderRadius: "8px",
                         backgroundColor: isToday ? "#FEB887" : "transparent",
                         color: isToday ? "#fff" : "#000",
                     }}

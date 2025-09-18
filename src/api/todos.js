@@ -5,10 +5,14 @@ const map = (dto) => ({
   id: dto.todoId,
   title: dto.content,
   completed: !!dto.done,
-  date: dto.date,
+  date: (dto.date ?? "").slice(0, 10),
 });
 
-// 전체/오늘 조회
+const toLocalISODate = (d = new Date()) => {
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off * 60000).toISOString().slice(0, 10);
+};
+
 export async function getTodos({ userId, mode = "all" }) {
   if (!userId) throw new Error("userId가 필요합니다.");
   const path = mode === "today" ? `${base}/list/today` : `${base}/list`;
@@ -16,18 +20,16 @@ export async function getTodos({ userId, mode = "all" }) {
   return (data?.todoList ?? []).map(map);
 }
 
-// 추가
 export async function createTodo({ userId, content }) {
   const { data } = await http.post(`${base}/register`, {
     userId, content
   });
   console.log("[debug] createTodo response:", data);
   return data?.todoId ? map(data) : {
-    id: Date.now(), title: content, completed: false, date: new Date().toISOString().slice(0,10),
+    id: Date.now(), title: content, completed: false, date: toLocalISODate(),
   };
 }
 
-// 완료/미완료
 export async function toggleTodoStatus({ todoId, userId }) {
   try {
     await http.patch(`${base}/${todoId}/status`, null, { params: { userId } });
@@ -39,7 +41,6 @@ export async function toggleTodoStatus({ todoId, userId }) {
   return true;
 }
 
-// 수정
 export async function updateTodo({ userId, todoId, content }) {
   const { data } = await http.patch(`${base}/patch`, {
     userId, todoId, content
@@ -47,7 +48,6 @@ export async function updateTodo({ userId, todoId, content }) {
   return data ?? null;
 }
 
-// 삭제
 export async function deleteTodo({ todoId, userId }) {
   await http.delete(`${base}/${todoId}/delete`, { params: { userId } });
   return true;
