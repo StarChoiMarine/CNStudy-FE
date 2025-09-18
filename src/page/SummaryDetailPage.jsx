@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { http } from "../api/axios";
 import "../styles/SummaryDetailPage.css";
 import Header from "../component/Header";
+import { Button } from "../styles/common";
+
 
 const SummaryDetailPage = () => {
   const { id } = useParams(); 
@@ -57,8 +59,9 @@ const SummaryDetailPage = () => {
   return (
     <>
       <Header />
-
-      <div className="container">
+ 
+      <div className="summaryDetail">
+        <div className="detailWrapper">
         <h2 className="title">Lecture Note</h2>
 
         {/* 글 정보 테이블 */}
@@ -158,14 +161,37 @@ const SummaryDetailPage = () => {
           )}
         </div>
 
-        {/* 목록 버튼 */}
+     {/* 목록 버튼 */}
         <div style={{ marginTop: "30px", textAlign: "right" }}>
-          <Link to="/summary" className="button">
-            목록보기
+          <Link to="/summary">
+            <Button style={{ width: "auto", padding: "10px 20px" }}>
+              목록보기
+            </Button>
           </Link>
-        </div>
+            <Link to={`/summary/edit/${summary.id}`} className="button" style={{ marginLeft: "10px" }}>
+              수정
+            </Link>
+          <button
+              onClick={async () => {
+                if (window.confirm("정말 삭제하시겠습니까?")) {
+                  try {
+                    await http.delete(`/summaries/${summary.id}`);
+                    alert("삭제되었습니다.");
+                    window.location.href = "/summary"; // 삭제 후 목록으로 이동
+                  } catch (err) {
+                    console.error("삭제 실패:", err);
+                    alert("삭제 중 오류가 발생했습니다.");
+                  }
+                }
+              }}
+             className="button"
+            style={{ marginLeft: "10px" }}
+           >
+         삭제
+         </button>
+    </div>
 
-        {/* 해시태그 */}
+     {/* 해시태그 */}
         <div style={{ marginTop: "15px" }}>
           {summary.hashtags?.map((tag, idx) => (
             <Link
@@ -183,6 +209,8 @@ const SummaryDetailPage = () => {
           ))}
         </div>
       </div>
+   </div>
+
     </>
   );
 };

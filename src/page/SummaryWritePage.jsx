@@ -88,7 +88,7 @@ const SummaryWritePage = () => {
   return (
     <>
       <Header />
-      <div
+      <div     className="summaryPage"
         style={{
           padding: "20px",
           maxWidth: "900px",
