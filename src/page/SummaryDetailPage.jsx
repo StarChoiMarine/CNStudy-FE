@@ -86,7 +86,7 @@ useEffect(() => {
         boardId: data.boardId,
         title: data.title,
         url: data.url,
-        author: data.userName ?? "알 수 없음",
+        author: data.name ?? "알 수 없음",
         date: data.createdAt,                     // "yyyy-MM-dd"
         category: data.category || "기타",
         views: data.viewCount ?? 0,
@@ -336,11 +336,8 @@ const handleAddComment = async () => {
               목록보기
             </Button>
           </Link>
-            <Link to={`/summary/edit/${summary.id}`} className="button" style={{ marginLeft: "10px" }}>
-              수정
-            </Link>
           <button
-              onClick={handleDelete}
+              onClick={handleDelete}className="commentButton" style={{ marginLeft: "10px" }}
            >
          삭제
          </button>

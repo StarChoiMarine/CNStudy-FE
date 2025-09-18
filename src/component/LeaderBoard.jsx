@@ -186,7 +186,7 @@ export default function LeaderBoard() {
                     <SmallAvatar><img src={userIcon} alt="user" /></SmallAvatar>
                     <Name>{u.userName}</Name>
                   </div>
-                  <Count>{u.score}개</Count>
+                  <Count>{u.score}점</Count>
                 </Row>
               ))
             )}
