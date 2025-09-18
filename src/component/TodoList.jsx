@@ -63,7 +63,7 @@ export default function TodoList({ mode = "all", dateISO, compact = false }) {
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="todo list"
+            placeholder="오늘의 할 일은?"
             style={{ 
                     border: "none",
                     borderRadius: "2px",
