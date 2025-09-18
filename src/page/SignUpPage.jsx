@@ -1,13 +1,13 @@
-// src/page/SignUpPage.jsx
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { http } from "../api/axios"; // 경로: src/page → src/api/axios.js
+import { http } from "../api/axios"; 
 import { Container, FormWrapper, Title, Input, Button, LinkText, FieldRow, Select  } from "../styles/common";
-import {Eye, EyeOff} from "lucide-react"; //비밀번호 감추기 버튼 이미지
+import {Eye, EyeOff} from "lucide-react"; 
 
 const SignUpPage = () => {
   const [name, setName] = useState("");
-  const [birth, setBirth] = useState(""); // YYYY-MM-DD
+  const [birthday, setBirthday] = useState(""); 
   const [email, setEmail] = useState("");
   const [passwd, setPasswd] = useState("");
   const [confirmPasswd, setConfirm] = useState("");
@@ -82,7 +82,7 @@ const SignUpPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !birth || !email || !passwd || !confirmPasswd) {
+    if (!name || !birthday || !email || !passwd || !confirmPasswd) {
       alert("모든 항목을 입력해 주세요.");
       return;
     }
@@ -93,17 +93,8 @@ const SignUpPage = () => {
 
     try {
       setLoading(true);
-
-      // 1) 이메일 중복 체크
-      const { data: existed } = await http.get("/users", { params: { email } });
-      if (Array.isArray(existed) && existed.length > 0) {
-        alert("이미 가입된 이메일입니다.");
-        return;
-      }
-
-      // 2) 회원 저장 (json-server: POST /users)
-      await http.post("/users", { name, birth, email, passwd });
-
+      
+      await http.post("/api/v1/users/signup", { name, birthday, email, passwd });
       alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
       navigate("/login", { replace: true });
     } catch (err) {
@@ -221,7 +212,7 @@ const SignUpPage = () => {
 
         <div>
           <label style={{fontSize: "15px"}}>생년월일</label>
-          <DateSelect value={birth} onChange={setBirth} />
+          <DateSelect value={birthday} onChange={setBirthday} />
         </div>
 
         <Button type="button" onClick={handleSubmit} disabled={loading} style={{fontSize: "15px"}}>
