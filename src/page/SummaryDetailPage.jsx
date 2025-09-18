@@ -6,6 +6,8 @@ import Header from "../component/Header";
 import { Button } from "../styles/common";
 
 
+
+
 const SummaryDetailPage = () => {
   const { id } = useParams(); 
   const [summary, setSummary] = useState(null);
@@ -13,6 +15,11 @@ const SummaryDetailPage = () => {
   const [newComment, setNewComment] = useState("");
   const [likedByMe, setLikedByMe] = useState(false);
   const [likeBusy, setLikeBusy] = useState(false);
+
+  const navigate = useNavigate();
+  const { id: routeId } = useParams(); // /summary/:id 라우트라고 가정
+
+
 
 // 상세 로딩(setSummary) 이후, 또는 id 바뀔 때 liked 상태 복원
 useEffect(() => {
@@ -98,7 +105,30 @@ useEffect(() => {
   fetchData();
 }, [id]);
 
+  const handleDelete = async () => {
+    // summary.boardId, summary.id, 라우트 id 중 사용 가능한 값 선택
+    const targetId = summary?.boardId ?? summary?.id ?? routeId;
+    if (!targetId) return alert("잘못된 게시글 ID입니다.");
 
+    if (!window.confirm("정말 삭제하시겠습니까?")) return;
+
+    try {
+      await http.delete(`/api/v1/boards/delete/${targetId}`); // baseURL이 /api/v1까지면 OK
+      alert("삭제되었습니다.");
+      navigate("/summary", { replace: true }); // 목록 페이지로 이동 (프로젝트 라우트에 맞춰 조정)
+    } catch (err) {
+      const status = err?.response?.status;
+      if (status === 404) {
+        alert("이미 삭제되었거나 존재하지 않는 글입니다.");
+        navigate("/summary", { replace: true });
+      } else if (status === 401 || status === 403) {
+        alert("삭제 권한이 없습니다. 로그인 상태를 확인해 주세요.");
+      } else {
+        console.error("삭제 실패:", err);
+        alert("삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
 const handleAddComment = async () => {
   const content = newComment.trim();
   if (!content) return;
@@ -310,20 +340,7 @@ const handleAddComment = async () => {
               수정
             </Link>
           <button
-              onClick={async () => {
-                if (window.confirm("정말 삭제하시겠습니까?")) {
-                  try {
-                    await http.delete(`/summaries/${summary.id}`);
-                    alert("삭제되었습니다.");
-                    window.location.href = "/summary"; // 삭제 후 목록으로 이동
-                  } catch (err) {
-                    console.error("삭제 실패:", err);
-                    alert("삭제 중 오류가 발생했습니다.");
-                  }
-                }
-              }}
-             className="button"
-            style={{ marginLeft: "10px" }}
+              onClick={handleDelete}
            >
          삭제
          </button>

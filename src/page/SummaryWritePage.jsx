@@ -15,7 +15,10 @@ const SummaryWritePage = () => {
   const [tagInput, setTagInput] = useState("");
 
   const [aiKeyword, setAiKeyword] = useState("");
-  const [aiResponse, setAiResponse] = useState("");
+  const [aiResponse, setAiResponse] = useState(null); // ← 객체로
+  const [aiData, setAiData] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState("");
 
   const navigate = useNavigate();
 
@@ -102,16 +105,104 @@ const SummaryWritePage = () => {
     setHashtags((prev) => prev.filter((t) => t !== tag));
   };
 
-  // ✅ AI 도움 (Mock)
-  const handleAskAI = async () => {
-    if (!content) return alert("강의 내용을 입력해주세요!");
-    try {
-      setAiResponse(`📌 (예시) "${content.slice(0, 30)}..." 요약 결과입니다.`);
-    } catch (err) {
-      console.error(err);
-      alert("AI 요약 요청에 실패했습니다.");
-    }
+
+
+// AI 도움: 백엔드 요약 API 호출
+// SummaryWritePage.jsx 안의 핸들러만 교체
+const handleAskAI = async () => {
+  const plain = content?.trim();
+  if (!plain) {
+    alert("강의 내용을 입력해주세요!");
+    return;
+  }
+
+  // JSON 스트링으로 올 때 대비: ```json ... ``` 제거 + parse
+  const stripCodeFence = (s) =>
+    typeof s === "string"
+      ? s.replace(/^```(?:json)?\s*/i, "").replace(/```$/i, "")
+      : s;
+  const tryParseJson = (s) => {
+    try { return JSON.parse(stripCodeFence(s)); } catch { return null; }
   };
+
+  try {
+    const { data } = await http.post("/api/v1/summary", plain, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Accept": "application/json",
+      },
+    });
+
+    // data 가 객체면 그대로, 문자열이면 JSON 파싱 시도
+    const obj = typeof data === "string" ? tryParseJson(data) : data;
+
+    if (obj && typeof obj === "object") {
+      // snake_case / camelCase 모두 대응
+      const title    = obj.title || "";
+      const overview = obj.overview || "";
+      const bullets  = obj.bullet_summary || obj.bulletSummary || [];
+      const terms    = obj.key_terms || obj.keyTerms || [];
+      const questions= obj.suggested_questions || obj.suggestedQuestions || [];
+      const actions  = obj.action_items || obj.actionItems || [];
+
+      // 깔끔한 문자열로 조립 (pre 태그에 그대로 뿌리기)
+      const sections = [];
+
+      if (title) sections.push(`📌 ${title}`);
+      if (overview) sections.push(overview);
+
+      if (Array.isArray(bullets) && bullets.length) {
+        sections.push(
+          ["\n■ 핵심 요약", ...bullets.map(b => `- ${b}`)].join("\n")
+        );
+      }
+
+      if (Array.isArray(terms) && terms.length) {
+        sections.push(
+          [
+            "\n■ 주요 용어",
+            ...terms.map((t,i) => {
+              const d = [
+                `(${i+1}) ${t.term || ""}`,
+                t.definition ? `  - 정의: ${t.definition}` : "",
+                t.why_it_matters ? `  - 중요성: ${t.why_it_matters}` : "",
+                t.example ? `  - 예시: ${t.example}` : "",
+              ].filter(Boolean);
+              return d.join("\n");
+            }),
+          ].join("\n")
+        );
+      }
+
+      if (Array.isArray(questions) && questions.length) {
+        sections.push(
+          ["\n■ 더 알아볼 질문", ...questions.map(q => `- ${q}`)].join("\n")
+        );
+      }
+
+      if (Array.isArray(actions) && actions.length) {
+        sections.push(
+          ["\n■ 액션 아이템", ...actions.map(a => `- ${a}`)].join("\n")
+        );
+      }
+
+      const pretty = sections.filter(Boolean).join("\n\n").trim();
+      setAiResponse(pretty || "결과가 비어 있습니다.");
+    } else {
+      // 객체가 아니면 있는 그대로(또는 보기 좋게)
+      setAiResponse(
+        typeof data === "string" ? stripCodeFence(data) : JSON.stringify(data, null, 2)
+      );
+    }
+  } catch (err) {
+    console.error("AI 요약 요청 실패:", err?.response?.data || err);
+    alert("AI 요약 요청에 실패했습니다.");
+  }
+};
+
+
+
+
 
   return (
     <>
@@ -217,13 +308,7 @@ const SummaryWritePage = () => {
           {/* AI 도움 */}
           <div style={{ flex: 1 }}>
             <h4 style={{ marginBottom: "5px" }}>🤖 학습 도움 AI</h4>
-            <Input
-              type="text"
-              value={aiKeyword}
-              onChange={(e) => setAiKeyword(e.target.value)}
-              placeholder="키워드 입력"
-              style={{ width: "93%" }}
-            />
+  
             <Button style={{ marginTop: "1px", width: "100%" }} onClick={handleAskAI}>
               요약하기 gpt mini 4.0
             </Button>
@@ -237,8 +322,11 @@ const SummaryWritePage = () => {
                 background: "#fafafa",
               }}
             >
-              {aiResponse || "AI 답변 ..."}
+              <pre style={{ whiteSpace: "pre-wrap", margin: 0 }}>
+                {aiResponse || "요약 결과가 여기에 표시됩니다."}
+</pre>
             </div>
+
           </div>
         </div>
 
