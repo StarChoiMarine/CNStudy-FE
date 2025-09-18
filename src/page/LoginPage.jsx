@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { http } from "../api/axios"; // 경로 확인: src/page → src/api/axios.js
+import { http } from "../api/axios"; 
 import { Container, FormWrapper, Title, Input, Button, LinkText } from "../styles/common";
-import {Eye, EyeOff} from "lucide-react"; //비밀번호 감추기 버튼 이미지
+import {Eye, EyeOff} from "lucide-react"; 
 
 
 const LoginPage = () => {
@@ -28,14 +28,17 @@ const LoginPage = () => {
       console.log("[debug] >>> email : ", email);
       console.log("[debug] >>> passwd : ", passwd);
 
-      // json-server: GET /users?email=...&passwd=...
-      const { data } = await http.get("/users", { params: { email, passwd } });
+      const { data } = await http.post("/api/v1/users/signin", { email, passwd });
 
-      if (Array.isArray(data) && data.length > 0) {
-        // 로그인 성공 처리 (간단 버전)
-        localStorage.setItem("user", JSON.stringify(data[0]));
-        // 필요시 토큰 흉내
-        localStorage.setItem("accessToken", `mock.${data[0].id}`);
+      if (data ?.accessToken) {
+        localStorage.setItem("user", JSON.stringify({
+          userId: data.userId,
+          email: data.email,
+          name: data.name,
+          birthday: data.birthday,
+        }));
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
         alert("로그인 성공!");
         navigate("/main", { replace: true });
       } else {
