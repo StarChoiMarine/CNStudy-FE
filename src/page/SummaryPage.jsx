@@ -3,34 +3,58 @@ import React, { useEffect, useMemo, useState } from "react";
 import { http } from "../api/axios";
 import { Link, useLocation } from "react-router-dom";
 import Header from "../component/Header";
-
-// ✅ 공통 스타일 불러오기
 import { Container, FormWrapper, Title, Button, Input } from "../styles/common";
 
 const SummaryPage = () => {
   const [summaries, setSummaries] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
-  const [category, setCategory] = useState("전체");
+  const [category, setCategory] = useState("전체"); // (옵션) 카테고리 필터
   const location = useLocation();
 
   // 🔍 검색 상태
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("all"); // all | title | author | content
 
+  // ✅ 백엔드 응답을 프론트 표준 형태로 정규화
+  const normalizeBoard = (b) => {
+    // 백엔드 BoardResponseDTO 예상 필드:
+    // id, title, content, url, category, hashtags(List<String> or string), author(or writer), createdAt(or date)
+    return {
+      id: b.id ?? b.boardId ?? b.boardSeq,
+      title: b.title ?? "",
+      author: b.name ?? "알 수 없음",
+      date:
+        (typeof b.createdAt === "string" && b.createdAt.slice(0, 10)) ||
+        (typeof b.date === "string" && b.date.slice(0, 10)) ||
+        "",
+      category: b.category ?? "기타",
+      content: b.content ?? "",
+      hashtags: Array.isArray(b.hashtags)
+        ? b.hashtags
+        : typeof b.hashtags === "string" && b.hashtags.length > 0
+        ? b.hashtags.split(",").map((t) => t.trim())
+        : [],
+      url: b.url ?? "",
+      _raw: b,
+    };
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await http.get("/summaries");
+        // ✅ 핵심: /summaries → /api/v1/boards/list
+        const { data } = await http.get("/api/v1/boards/list");
+        const rows = Array.isArray(data) ? data.map(normalizeBoard) : [];
 
-        // id 기준 내림차순 정렬
+        // id 내림차순 정렬(숫자인 경우 우선)
         const toNum = (v) => {
           const n = Number(v);
           return Number.isFinite(n) ? n : -Infinity;
         };
-        let sorted = [...data].sort((a, b) => toNum(b.id) - toNum(a.id));
+        let sorted = [...rows].sort((a, b) => toNum(b.id) - toNum(a.id));
 
-        // ✅ 쿼리파라미터(tag) 확인해서 해시태그 필터링
+        // ✅ 쿼리파라미터(tag)로 해시태그 필터링 유지
         const params = new URLSearchParams(location.search);
         const tag = params.get("tag");
         if (tag) {
@@ -39,18 +63,25 @@ const SummaryPage = () => {
 
         setSummaries(sorted);
       } catch (err) {
-        console.error(err);
+        console.error("목록 로딩 실패:", err);
+        alert("게시글 목록을 불러오지 못했습니다.");
       }
     };
     fetchData();
   }, [location.search]);
 
-  // 🔍 검색 필터링
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return summaries;
 
-    return summaries.filter((s) => {
+    let base = summaries;
+    if (category !== "전체") {
+      base = base.filter((s) => (s.category || "기타") === category);
+    }
+
+    if (!q) return base;
+
+    return base.filter((s) => {
       const inTitle = (s.title || "").toLowerCase().includes(q);
       const inAuthor = (s.author || "").toLowerCase().includes(q);
       const inContent = (s.content || "").toLowerCase().includes(q);
@@ -60,17 +91,16 @@ const SummaryPage = () => {
       if (scope === "content") return inContent;
       return inTitle || inAuthor || inContent;
     });
-  }, [summaries, query, scope]);
+  }, [summaries, query, scope, category]);
 
-  // 검색 조건 바뀌면 1페이지로
+  // 검색/범위/카테고리 바뀌면 1페이지로
   useEffect(() => {
     setCurrentPage(1);
-  }, [query, scope]);
+  }, [query, scope, category]);
 
   const indexOfLast = currentPage * postsPerPage;
   const indexOfFirst = indexOfLast - postsPerPage;
   const currentSummaries = filtered.slice(indexOfFirst, indexOfLast);
-
   const totalPages = Math.ceil(filtered.length / postsPerPage) || 1;
 
   return (
@@ -81,52 +111,79 @@ const SummaryPage = () => {
         <FormWrapper style={{ width: "1000px", maxWidth: "100%" }}>
           <Title>강의 내용 게시판</Title>
 
-          {/* 🔍 검색 바 */}
+          {/* 🔍 검색/필터 바 */}
           <div
             style={{
               display: "flex",
               gap: 8,
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
               alignItems: "center",
               marginBottom: 12,
+              flexWrap: "wrap",
             }}
           >
-            <select
-              value={scope}
-              onChange={(e) => setScope(e.target.value)}
-              style={{
-                height: 36,
-                padding: "0 10px",
-                border: "1px solid #ddd",
-                borderRadius: 8,
-                background: "#fff",
-              }}
-            >
-              <option value="all">전체</option>
-              <option value="title">제목</option>
-              <option value="author">작성자</option>
-              <option value="content">내용</option>
-            </select>
-
-            <div style={{ position: "relative" }}>
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="검색어를 입력하세요"
-                style={{ width: 240, paddingRight: 34 }}
-              />
-              <span
+            {/* (옵션) 카테고리 필터 */}
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <label style={{ fontSize: 14, opacity: 0.7 }}>카테고리</label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
                 style={{
-                  position: "absolute",
-                  right: 10,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  opacity: 0.5,
-                  fontSize: 14,
+                  height: 36,
+                  padding: "0 10px",
+                  border: "1px solid #ddd",
+                  borderRadius: 8,
+                  background: "#fff",
                 }}
               >
-                🔍
-              </span>
+                <option value="전체">전체</option>
+                <option value="백엔드">백엔드</option>
+                <option value="프론트엔드">프론트엔드</option>
+                <option value="클라우드">클라우드</option>
+                <option value="AI">AI</option>
+                <option value="알고리즘">알고리즘</option>
+                <option value="기타">기타</option>
+              </select>
+            </div>
+
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <select
+                value={scope}
+                onChange={(e) => setScope(e.target.value)}
+                style={{
+                  height: 36,
+                  padding: "0 10px",
+                  border: "1px solid #ddd",
+                  borderRadius: 8,
+                  background: "#fff",
+                }}
+              >
+                <option value="all">전체</option>
+                <option value="title">제목</option>
+                <option value="author">작성자</option>
+                <option value="content">내용</option>
+              </select>
+
+              <div style={{ position: "relative" }}>
+                <Input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="검색어를 입력하세요"
+                  style={{ width: 240, paddingRight: 34 }}
+                />
+                <span
+                  style={{
+                    position: "absolute",
+                    right: 10,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    opacity: 0.5,
+                    fontSize: 14,
+                  }}
+                >
+                  🔍
+                </span>
+              </div>
             </div>
           </div>
 
@@ -163,6 +220,8 @@ const SummaryPage = () => {
                         ((currentPage - 1) * postsPerPage + index)}
                     </td>
                     <td style={{ textAlign: "center", padding: "8px" }}>
+                      {/* 상세 페이지 라우트는 기존 /summary/:id 유지.
+                          상세 컴포넌트에서 GET /api/v1/boards/read/{id} 호출 */}
                       <Link to={`/summary/${s.id}`} style={{ color: "#333" }}>
                         {s.title}
                       </Link>

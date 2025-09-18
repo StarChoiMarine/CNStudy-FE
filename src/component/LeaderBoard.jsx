@@ -5,8 +5,6 @@ import { http } from "../api/axios";
 import userIcon from "../styles/images/usericon.png";
 
 /* ============ styled ============ */
-
-
 const Wrap = styled.section`
   backdrop-filter: blur(10px);
   background: rgba(255,255,255,0.28);
@@ -15,23 +13,20 @@ const Wrap = styled.section`
   box-shadow: 0 10px 28px rgba(0,0,0,0.12);
   padding: 18px 22px;
 `;
-
 const Title = styled.h3`
   margin: 0 0 14px;
   font-size: 22px;
   font-weight: 800;
   text-align: center;
 `;
-
 const Top3 = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
-  align-items: end; /* 2,3등은 아래쪽 정렬 */
+  align-items: end;
   gap: 12px;
   margin-bottom: 10px;
 `;
-
 const MedalCard = styled.div`
   font-size: 20px;
   display: flex;
@@ -40,48 +35,39 @@ const MedalCard = styled.div`
   gap: 6px;
   opacity: ${({$placeholder}) => ($placeholder ? .6 : 1)};
 `;
-
 const StarRow = styled.div`
   color: #ff6aa5;
   font-size: 20px;
   letter-spacing: 2px;
   height: 16px;
 `;
-
 const Avatar = styled.div`
   width: ${({$big}) => ($big ? "88px" : "68px")};
   height: ${({$big}) => ($big ? "88px" : "68px")};
-  margin-top: ${({$lower}) => ($lower ? "20px" : "0")}; /* 2,3등 살짝 내려감 */
+  margin-top: ${({$lower}) => ($lower ? "20px" : "0")};
   border-radius: 50%;
   display: grid;
   place-items: center;
   border: 3px solid ${({$placeholder}) => ($placeholder ? "#d7d6dd" : "#ff6aa5")};
   background: #eceaf3;
   overflow: hidden;
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  img { width: 100%; height: 100%; object-fit: cover; }
 `;
-
 const MedalInfo = styled.div`
   text-align: center;
   line-height: 1.2;
-  margin-top: ${({$lower}) => ($lower ? "15px" : "0")}; /* 2,3등 살짝 내려감 */
+  margin-top: ${({$lower}) => ($lower ? "15px" : "0")};
   font-size: ${({$bigger}) => ($bigger ? "24px" : "20px")};
   small { display:block; opacity:.7; }
   b { font-weight:900; }
   gap: 6px;
 `;
-
 const List = styled.div`
   margin-top: 6px;
   display: grid;
   gap: 8px;
   min-height: 120px;
 `;
-
 const Row = styled.div`
   display: grid;
   grid-template-columns: 28px 1fr auto;
@@ -90,14 +76,9 @@ const Row = styled.div`
   padding: 8px 10px;
   border-radius: 12px;
 `;
-
 const SmallAvatar = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #eceaf3;
-  border: 2px solid #ff6aa5;
-  overflow: hidden;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #eceaf3; border: 2px solid #ff6aa5; overflow: hidden;
   img { width: 100%; height: 100%; object-fit: cover; }
 `;
 const Rank = styled.span` font-size:20px; font-weight: 800; width: 28px; text-align:center; `;
@@ -106,53 +87,44 @@ const Count = styled.span` font-size:20px; font-variant-numeric: tabular-nums; o
 const EmptyHint = styled.div` opacity:.7; padding: 8px 2px; `;
 
 /* ============ helpers ============ */
-function sortRanking(a, b) {
-  if (b.count !== a.count) return b.count - a.count;
-  if ((b.likes ?? 0) !== (a.likes ?? 0)) return (b.likes ?? 0) - (a.likes ?? 0);
-  const dA = a.latest ? +new Date(a.latest) : 0;
-  const dB = b.latest ? +new Date(b.latest) : 0;
-  return dB - dA;
+function sortByScore(a, b) {
+  if ((b.score ?? 0) !== (a.score ?? 0)) return (b.score ?? 0) - (a.score ?? 0);
+  if ((b.postCount ?? 0) !== (a.postCount ?? 0)) return (b.postCount ?? 0) - (a.postCount ?? 0);
+  if ((b.commentCount ?? 0) !== (a.commentCount ?? 0)) return (b.commentCount ?? 0) - (a.commentCount ?? 0);
+  return String(a.userName || "").localeCompare(String(b.userName || ""));
 }
-function assignRanks(arr){ return arr.map((x,i)=>({...x, rank:i+1})); }
+const assignRanks = (arr) => arr.map((x, i) => ({ ...x, rank: i + 1 }));
 
 /* ============ component ============ */
 export default function LeaderBoard() {
-  const [summaries, setSummaries] = useState([]);
+  const [leaders, setLeaders] = useState([]);  // [{ userId, userName, postCount, commentCount, score }]
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    (async() => {
+    (async () => {
       try {
-        const res = await http.get("/summaries");
-        setSummaries(res.data || []);
-      } catch(e) {
-        console.error("leaderboard fetch error", e);
+        // 백엔드: GET /api/v1/rank/leaderboard?size=10
+        const res = await http.get("/api/v1/rank/leaderboard", { params: { size: 10 } });
+        const data = Array.isArray(res.data) ? res.data : [];
+        // 안정성: 혹시 정렬이 보장 안 되면 클라에서 재정렬
+        const sorted = [...data].sort(sortByScore);
+        setLeaders(assignRanks(sorted));
+      } catch (e) {
+        console.error("leaderboard fetch error", e?.response?.data || e);
+        setLeaders([]);
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
-  const ranking = useMemo(() => {
-    const byAuthor = new Map();
-    for (const s of summaries) {
-      const key = s.author ?? "알 수 없음";
-      const prev = byAuthor.get(key) || { name:key, count:0, likes:0, latest:null };
-      prev.count += 1;
-      prev.likes += s.likes ?? 0;
-      if (!prev.latest || new Date(s.date) > new Date(prev.latest)) prev.latest = s.date;
-      byAuthor.set(key, prev);
-    }
-    return assignRanks(Array.from(byAuthor.values()).sort(sortRanking));
-  }, [summaries]);
+  // Top3 + 나머지(최대 10위까지)
+  const paddedTop3 = useMemo(() => {
+    const top3 = leaders.slice(0, 3);
+    return Array.from({ length: 3 }, (_, i) => top3[i] ?? { rank: i + 1, userName: "없음", postCount: 0, placeholder: true });
+  }, [leaders]);
 
-  // 항상 3칸 고정
-  const paddedTop3 = Array.from({ length: 3 }, (_, i) => {
-    const item = ranking[i];
-    return item ?? { rank: i+1, name: "없음", count: 0, placeholder: true };
-  });
-
-  const rest = ranking.slice(3, 10);
+  const rest = useMemo(() => leaders.slice(3, 10), [leaders]);
 
   return (
     <Wrap>
@@ -162,36 +134,42 @@ export default function LeaderBoard() {
         <div>불러오는 중…</div>
       ) : (
         <>
-          {/* Top3 (1등은 중앙, 2등 왼쪽, 3등 오른쪽) */}
+          {/* Top3 (1등 중앙, 2등 왼쪽, 3등 오른쪽) */}
           <Top3>
             {/* 2등 */}
             <MedalCard $placeholder={paddedTop3[1].placeholder} $lower>
-              <Avatar $lower><img src={userIcon} alt="user"/></Avatar>
-              <MedalInfo >
+              <Avatar $lower $placeholder={paddedTop3[1].placeholder}>
+                <img src={userIcon} alt="user" />
+              </Avatar>
+              <MedalInfo>
                 <div><b>2등</b></div>
-                <div>{paddedTop3[1].name}</div>
-                <small>({paddedTop3[1].count}개)</small>
+                <div>{paddedTop3[1].userName}</div>
+                <small>({paddedTop3[1].score}점)</small>
               </MedalInfo>
             </MedalCard>
 
-            {/* 1등 (중앙, 크게) */}
+            {/* 1등 */}
             <MedalCard $placeholder={paddedTop3[0].placeholder}>
               <StarRow>★ ★ ★</StarRow>
-              <Avatar $big ><img src={userIcon} alt="user"/></Avatar>
+              <Avatar $big $placeholder={paddedTop3[0].placeholder}>
+                <img src={userIcon} alt="user" />
+              </Avatar>
               <MedalInfo $lower $bigger>
                 <div><b>1등</b></div>
-                <div>{paddedTop3[0].name}</div>
-                <small>({paddedTop3[0].count}개)</small>
+                <div>{paddedTop3[0].userName}</div>
+                <small>({paddedTop3[0].score}점)</small>
               </MedalInfo>
             </MedalCard>
 
             {/* 3등 */}
             <MedalCard $placeholder={paddedTop3[2].placeholder}>
-              <Avatar $lower><img src={userIcon} alt="user"/></Avatar>
-              <MedalInfo >
+              <Avatar $lower $placeholder={paddedTop3[2].placeholder}>
+                <img src={userIcon} alt="user" />
+              </Avatar>
+              <MedalInfo>
                 <div><b>3등</b></div>
-                <div>{paddedTop3[2].name}</div>
-                <small>({paddedTop3[2].count}개)</small>
+                <div>{paddedTop3[2].userName}</div>
+                <small>({paddedTop3[2].score}점)</small>
               </MedalInfo>
             </MedalCard>
           </Top3>
@@ -201,14 +179,14 @@ export default function LeaderBoard() {
             {rest.length === 0 ? (
               <EmptyHint>추가 순위가 아직 없어요.</EmptyHint>
             ) : (
-              rest.slice(0,3).map(u => (
-                <Row key={u.name}>
-                  <Rank>{u.rank} </Rank>
-                  <div style={{display:"flex",alignItems:"center",gap:8}}>
-                    <SmallAvatar><img src={userIcon} alt="user"/></SmallAvatar>
-                    <Name>{u.name}</Name>
+              rest.map((u) => (
+                <Row key={u.userId ?? u.userName}>
+                  <Rank>{u.rank}</Rank>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <SmallAvatar><img src={userIcon} alt="user" /></SmallAvatar>
+                    <Name>{u.userName}</Name>
                   </div>
-                  <Count>{u.count}개</Count>
+                  <Count>{u.score}개</Count>
                 </Row>
               ))
             )}

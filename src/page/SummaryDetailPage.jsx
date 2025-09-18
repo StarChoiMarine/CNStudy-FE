@@ -11,48 +11,148 @@ const SummaryDetailPage = () => {
   const [summary, setSummary] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [likedByMe, setLikedByMe] = useState(false);
+  const [likeBusy, setLikeBusy] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await http.get(`/summaries/${id}`);
+// 상세 로딩(setSummary) 이후, 또는 id 바뀔 때 liked 상태 복원
+useEffect(() => {
+  try {
+    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+    const userId =
+      storedUser.userId ?? storedUser.id ?? storedUser.userSeq ?? storedUser.seq ?? storedUser.uid;
+    const boardId = summary?.boardId ?? summary?.id ?? id;
+    if (userId && boardId) {
+      const key = `liked:${boardId}:${userId}`;
+      setLikedByMe(localStorage.getItem(key) === "1");
+    } else {
+      setLikedByMe(false);
+    }
+  } catch {
+    setLikedByMe(false);
+  }
+  // summary, id 중 하나라도 바뀌면 다시 계산
+}, [summary, id]);
 
-        // 조회수 증가
-        const updatedViews = (data.views || 0) + 1;
-        setSummary({ ...data, views: updatedViews });
 
-        // 서버에 반영
-        await http.patch(`/summaries/${id}`, { views: updatedViews });
 
-        setComments(data.comments || []);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchData();
-  }, [id]);
 
-  const handleAddComment = () => {
-    if (!newComment.trim()) return;
+useEffect(() => {
+  const fetchComments = async (boardId) => {
+    try {
+      // GET /api/v1/comments/list/{boardId}
+      const { data } = await http.get(`/api/v1/comments/list/${boardId}`);
+      // CommentResponseData 안에 리스트가 어느 키로 들어올지 방어적으로 처리
+      const list = Array.isArray(data)
+        ? data
+        : Array.isArray(data.comments)
+        ? data.comments
+        : Array.isArray(data.commentList)
+        ? data.commentList
+        : Array.isArray(data.items)
+        ? data.items
+        : [];
 
-    const user = JSON.parse(localStorage.getItem("user")) || { name: "익명" };
-
-    const updated = [
-      ...comments,
-      {
-        author: user.name,
-        text: newComment,
-        date: new Date().toISOString().split("T")[0],
-      },
-    ];
-    setComments(updated);
-    setNewComment("");
-
-    // 서버 저장
-    http.patch(`/summaries/${id}`, { comments: updated }).catch((err) =>
-      console.error("댓글 저장 실패:", err)
-    );
+      setComments(
+        list.map((c) => ({
+          // 화면은 기존 author/text/date 필드 사용
+          id: c.commentId,
+          userId: c.userId,
+          author: c.userName,
+          text: c.content,
+          date: c.createdAt, // "yyyy-MM-dd"
+        }))
+      );
+    } catch (err) {
+      console.error("댓글 로딩 실패:", err?.response?.data || err);
+      setComments([]);
+    }
   };
+
+  const fetchData = async () => {
+    try {
+      // ✅ 게시글 상세 (조회 시 viewCount는 서버에서 증가됨)
+      const { data } = await http.get(`/api/v1/boards/read/${id}`);
+
+      // 서버 BoardResponseDTO -> 화면 상태로 매핑
+      setSummary({
+        id: data.boardId,                         // 기존 코드에서 summary.id 쓰면 대비
+        boardId: data.boardId,
+        title: data.title,
+        url: data.url,
+        author: data.userName ?? "알 수 없음",
+        date: data.createdAt,                     // "yyyy-MM-dd"
+        category: data.category || "기타",
+        views: data.viewCount ?? 0,
+        likes: data.likeCount ?? 0,
+        content: data.content,
+        hashtags: Array.isArray(data.hashtags) ? data.hashtags : [],
+      });
+
+      // ✅ 댓글 로딩
+      await fetchComments(id);
+    } catch (err) {
+      console.error("상세/댓글 로딩 실패:", err?.response?.data || err);
+    }
+  };
+
+  fetchData();
+}, [id]);
+
+
+const handleAddComment = async () => {
+  const content = newComment.trim();
+  if (!content) return;
+
+  const raw = JSON.parse(localStorage.getItem("user")) || {};
+  const userId =
+    raw.userId ?? raw.id ?? raw.seq ?? raw.userSeq ?? raw.uid ?? undefined;
+
+  if (!userId) {
+    alert("로그인 후 댓글 작성이 가능합니다.");
+    return;
+  }
+
+  try {
+    // POST /api/v1/comments/register
+    await http.post(
+      `/api/v1/comments/register`,
+      {
+        boardId: Number(summary?.boardId ?? id),
+        userId: Number(userId),
+        content,
+      },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    // 서버에서 201만 주는 구조이므로, 등록 후 목록 재조회
+    const { data } = await http.get(`/api/v1/comments/list/${summary?.boardId ?? id}`);
+    const list = Array.isArray(data)
+      ? data
+      : Array.isArray(data.comments)
+      ? data.comments
+      : Array.isArray(data.commentList)
+      ? data.commentList
+      : Array.isArray(data.items)
+      ? data.items
+      : [];
+    setComments(
+      list.map((c) => ({
+        id: c.commentId,
+        userId: c.userId,
+        author: c.userName,
+        text: c.content,
+        date: c.createdAt,
+      }))
+    );
+
+    setNewComment("");
+  } catch (err) {
+    console.error("댓글 등록 실패:", err?.response?.data || err);
+    alert("댓글 등록 중 오류가 발생했습니다.");
+  }
+};
+
+
 
   if (!summary) return <p>로딩 중...</p>;
 
@@ -95,39 +195,77 @@ const SummaryDetailPage = () => {
         {/* 본문 */}
         <div className="contentBox">{summary.content}</div>
 
-        {/* 좋아요 버튼 */}
-        <button
-          className="likeButton"
-          onClick={() => {
-            const user = JSON.parse(localStorage.getItem("user"));
-            if (!user) {
-              alert("로그인 후 좋아요 가능합니다!");
-              return;
-            }
 
-            const alreadyLiked = (summary.likedUsers || []).includes(user.id);
+{/* 좋아요 버튼 */}
+<button
+  className="likeButton"
+  disabled={likeBusy}
+  onClick={async () => {
+    const stored = JSON.parse(localStorage.getItem("user") || "{}");
+    const userId =
+      stored.userId ?? stored.id ?? stored.userSeq ?? stored.seq ?? stored.uid;
+    if (!userId) {
+      alert("로그인 후 좋아요 가능합니다!");
+      return;
+    }
 
-            let updatedLikes;
-            let updatedUsers;
+    const boardId = summary.boardId ?? summary.id ?? id;
+    const key = `liked:${boardId}:${userId}`;
 
-            if (alreadyLiked) {
-              updatedLikes = (summary.likes || 0) - 1;
-              updatedUsers = summary.likedUsers.filter((uid) => uid !== user.id);
-            } else {
-              updatedLikes = (summary.likes || 0) + 1;
-              updatedUsers = [...(summary.likedUsers || []), user.id];
-            }
+    const tryAdd = () => http.post(`/api/v1/boards/like/${boardId}?userId=${userId}`);
+    const tryDel = () => http.delete(`/api/v1/boards/like/${boardId}?userId=${userId}`);
 
-            setSummary({ ...summary, likes: updatedLikes, likedUsers: updatedUsers });
+    setLikeBusy(true);
+    try {
+      if (likedByMe) {
+        // 보통은 취소가 맞다
+        try {
+          await tryDel();
+          setSummary((s) => ({ ...s, likes: Math.max(0, (s.likes || 0) - 1) }));
+          setLikedByMe(false);
+          localStorage.removeItem(key);
+        } catch (err) {
+          // 서버는 이미 취소된 상태라고 보는 경우(404) → 보정: 추가 시도
+          if (err?.response?.status === 404) {
+            await tryAdd();
+            setSummary((s) => ({ ...s, likes: (s.likes || 0) + 1 }));
+            setLikedByMe(true);
+            localStorage.setItem(key, "1");
+          } else {
+            throw err;
+          }
+        }
+      } else {
+        // 보통은 추가가 맞다
+        try {
+          await tryAdd();
+          setSummary((s) => ({ ...s, likes: (s.likes || 0) + 1 }));
+          setLikedByMe(true);
+          localStorage.setItem(key, "1");
+        } catch (err) {
+          // 서버는 이미 좋아요 돼있다고 보는 경우(404) → 보정: 취소 시도
+          if (err?.response?.status === 404) {
+            await tryDel();
+            setSummary((s) => ({ ...s, likes: Math.max(0, (s.likes || 0) - 1) }));
+            setLikedByMe(false);
+            localStorage.removeItem(key);
+          } else {
+            throw err;
+          }
+        }
+      }
+    } catch (err) {
+      console.error("좋아요 처리 실패:", err?.response?.data || err);
+      alert("좋아요 처리에 실패했습니다.");
+    } finally {
+      setLikeBusy(false);
+    }
+  }}
+>
+  {likedByMe ? "❤️" : "❤️"} {summary.likes || 0}
+</button>
 
-            http.patch(`/summaries/${id}`, {
-              likes: updatedLikes,
-              likedUsers: updatedUsers,
-            }).catch((err) => console.error("좋아요 저장 실패:", err));
-          }}
-        >
-          ❤️ {summary.likes || 0}
-        </button>
+
 
         {/* 댓글 입력 */}
         <div className="commentBox">
