@@ -111,15 +111,16 @@ export default function TodoList({ mode = "all", dateISO, compact = false }) {
         <form onSubmit={onAdd} style={{ display: "flex", gap: 8 }}>
           <input
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="할 일을 입력하세요"
-            style={{
-              flex: 1,
-              padding: "10px 12px",
-              border: "1px solid #ddd",
-              borderRadius: 6,
-              background: "#F5F5F5"
-            }}
+            onChange={(e) => setTitle(e.target.value)
+            placeholder="오늘의 할 일은?"
+            style={{ 
+                    border: "none",
+                    borderRadius: "2px",
+                    backgroundColor: "#F5F5F5",
+                    color: "#000",
+                    cursor: "pointer",
+                    fontSize: "15px"
+                    }}
           />
           <button
             type="submit"
