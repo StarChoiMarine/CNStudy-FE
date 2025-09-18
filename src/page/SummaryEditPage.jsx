@@ -42,9 +42,10 @@ const SummaryEditPage = () => {
   };
 
  return (
-  <div className="container">
+  <div className="summaryWrite container">
     <h2> 📄 게시글 수정 페이지 </h2>
 
+<div>
     <label className="formLabel">제목</label>
     <input
       type="text"
@@ -54,7 +55,9 @@ const SummaryEditPage = () => {
       placeholder="제목을 입력하세요"
       className="inputBox"
     />
+</div>
 
+<div>
     <label className="formLabel">URL</label>
     <input
       type="text"
@@ -64,7 +67,9 @@ const SummaryEditPage = () => {
       placeholder="관련 링크를 입력하세요"
       className="inputBox"
     />
+</div>
 
+<div>
     <label className="formLabel">내용</label>
     <textarea
       name="content"
@@ -73,10 +78,12 @@ const SummaryEditPage = () => {
       placeholder="내용을 입력하세요"
       className="textAreaBox"
     />
+</div>
 
+<div>
     <button onClick={handleSubmit} className="button">저장</button>
   </div>
-
+</div>
   );
 };
 

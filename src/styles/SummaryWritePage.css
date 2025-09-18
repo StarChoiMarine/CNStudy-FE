@@ -1,10 +1,13 @@
-.summaryWrite .container {
+.summaryWrite.container {
   max-width: 900px;
+  width: 100%;
   margin: 40px auto;
   background: #fff;
   padding: 20px;
   border-radius: 8px;
+  box-sizing: border-box;
 }
+
 
 .summaryWrite input,
 .summaryWrite textarea {
