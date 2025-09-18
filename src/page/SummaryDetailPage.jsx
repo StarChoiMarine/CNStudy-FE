@@ -59,8 +59,9 @@ const SummaryDetailPage = () => {
   return (
     <>
       <Header />
-
-      <div className="container">
+ 
+      <div className="summaryDetail">
+        <div className="detailWrapper">
         <h2 className="title">Lecture Note</h2>
 
         {/* 글 정보 테이블 */}
@@ -208,6 +209,8 @@ const SummaryDetailPage = () => {
           ))}
         </div>
       </div>
+   </div>
+
     </>
   );
 };
