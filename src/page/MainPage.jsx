@@ -1,4 +1,5 @@
 // src/page/MainPage.jsx
+import React, { useState } from "react";
 import styled from "styled-components";
 import Header from "../component/Header";
 import WeatherBackground from "../component/WeatherBackground";
@@ -7,8 +8,9 @@ import useJungguWeather from "../hook/useJungguWeather";
 import LeaderBoard from "../component/LeaderBoard";
 import MainPageCalendar from "../component/MainPageCalendar";
 import CalendarModal from "../component/CalendarModal";
-import { useState } from "react";
-import Luck from "../component/Luck"; 
+import FortuneWidget from "../component/FortuneWidget";
+
+
 
 const Page = styled.div`
   position: fixed;
@@ -41,6 +43,7 @@ const Right = styled.div`
   flex-direction: column;
   align-items: stretch;   /* 좌우 꽉 채우기 */
   gap: 16px;              /* 날씨와 리더보드 사이 간격 */
+  justify-content: flex-start;
 `;
 
 const SmallCard = styled.section`
@@ -62,10 +65,15 @@ export default function MainPage() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [open, setOpen] = useState(false);
 
+
+
+
   function handleSelectDate(dateISO) {
     setSelectedDate(dateISO);
     setOpen(true);
   }
+
+
 
 
   return (
@@ -96,15 +104,8 @@ export default function MainPage() {
 
         {/* 우측: 일단 비워둠 (추후 운세/캘린더) */}
         <Right>
-          
-          {/* 여기서 Luck 컴포넌트 불러오기 */}
-          <Luck
-            name={user?.name || "게스트"}
-            birth={user?.birth || "1997-09-04"}
-            mock={true}   // 지금은 테스트용
-          />
 
-          <SmallCard>운세 받아와서 로드하기</SmallCard>
+          <FortuneWidget />
           <MainPageCalendar 
           onSelectDate={handleSelectDate} 
           selectedDate={selectedDate}
@@ -114,6 +115,8 @@ export default function MainPage() {
             selectedDate={selectedDate}
             onClose={() => setOpen(false)}
           />
+
+          
         </Right>
       </Layout>
     </Page>
