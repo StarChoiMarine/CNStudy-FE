@@ -4,6 +4,7 @@ import { http } from "../api/axios";
 import "../styles/SummaryDetailPage.css";
 import Header from "../component/Header";
 import { Button } from "../styles/common";
+import { useNavigate } from "react-router-dom";
 
 
 
