@@ -13,7 +13,7 @@ const SummaryWritePage = () => {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("기타");
 
-  const [hashtags, setHashtags] = useState([]); // 배열로 관리
+  const [hashtags, setHashtags] = useState([]); 
   const [tagInput, setTagInput] = useState("");
 
   const [aiKeyword, setAiKeyword] = useState("");
@@ -21,7 +21,6 @@ const SummaryWritePage = () => {
 
   const navigate = useNavigate();
 
-  // ✅ 글 작성 저장
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !content) return alert("제목과 강의 내용을 입력하세요!");
@@ -50,14 +49,12 @@ const SummaryWritePage = () => {
   };
 
   
-  // ✅ 임시 저장
   const handleTempSave = () => {
     const tempData = { title, url, content, category, hashtags };
     localStorage.setItem("tempSummary", JSON.stringify(tempData));
     alert("임시 저장되었습니다!");
   };
 
-  // ✅ 해시태그 추가
   const handleAddTag = (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -69,12 +66,11 @@ const SummaryWritePage = () => {
     }
   };
 
-  // ✅ 해시태그 삭제
   const handleRemoveTag = (tag) => {
     setHashtags(hashtags.filter((t) => t !== tag));
   };
 
-  // ✅ AI 도움 (Mock)
+
   const handleAskAI = async () => {
     if (!content) return alert("강의 내용을 입력해주세요!");
     try {
@@ -116,7 +112,7 @@ const SummaryWritePage = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="제목을 입력해주세요."
-            style={{ width: "100%", boxSizing: "border-box" }}   // ✅ 고정
+            style={{ width: "100%", boxSizing: "border-box" }}   
 
             
           />
@@ -126,7 +122,7 @@ const SummaryWritePage = () => {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="관련된 링크 첨부"
-            style={{ width: "100%", boxSizing: "border-box" }}   // ✅ 고정
+            style={{ width: "100%", boxSizing: "border-box" }}   
 
           />
 
@@ -150,7 +146,7 @@ const SummaryWritePage = () => {
           </select>
         </div>
 
- {/* 좌/우 flex → 강의내용 + AI 도움 */}
+      {/* 좌/우 flex → 강의내용 + AI 도움 */}
         <div style={{ display: "flex", gap: "20px", alignItems: "stretch" }}>
           {/* 강의 내용 */}
           <div style={{ flex: 1, display: "flex", flexDirection: "column", paddingTop: "20px" }}> 
@@ -172,8 +168,8 @@ const SummaryWritePage = () => {
               border: "1px solid #ccc",
               borderRadius: "6px",
               fontSize: "16px",
-              minHeight: "350px",   //  최소 높이 통일
-              resize: "none",       //  크기조절 금지
+              minHeight: "350px",   
+              resize: "none",      
               boxSizing: "border-box",
             }}
             />
@@ -210,7 +206,7 @@ const SummaryWritePage = () => {
           </div>
         </div>
 
- {/* 해시태그 (독립 배치) */}
+  {/* 해시태그 (독립 배치) */}
         <div style={{ marginTop: "10px" }}>
           <label
             style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}

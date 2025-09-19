@@ -1,10 +1,9 @@
-// src/component/Luck.jsx
 import React, { useEffect, useState } from "react";
 
 export default function Luck({
   name = "게스트",
   birth = "1997-09-04",
-  mock = true,   // 👉 테스트할 땐 true, 실제 API 연결 시 false
+  mock = true,   // 테스트할 땐 true, 실제 API 연결 시 false
   style = {},
 }) {
   const [text, setText] = useState("운세 받아와서 로드하기");
@@ -16,12 +15,11 @@ export default function Luck({
     (async () => {
       try {
         if (mock) {
-          // 👉 mock 모드: 가짜 데이터 표시
           await new Promise((r) => setTimeout(r, 500));
           if (alive)
             setText(`오늘은 집중력 상승! ${name}님, 중요한 일 먼저 처리해보자 😊`);
         } else {
-          // 👉 실제 API 연동 자리
+          // 실제 API 연동 자리
           // const { data } = await http.post("/fortune", { name, birth });
           // if (alive) setText(data.message);
         }

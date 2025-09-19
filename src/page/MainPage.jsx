@@ -97,11 +97,11 @@ export default function MainPage() {
         {/* 우측: 일단 비워둠 (추후 운세/캘린더) */}
         <Right>
           
-              {/* ✅ 여기서 Luck 컴포넌트 불러오기 */}
+          {/* 여기서 Luck 컴포넌트 불러오기 */}
           <Luck
             name={user?.name || "게스트"}
             birth={user?.birth || "1997-09-04"}
-            mock={true}   // 👉 지금은 테스트용
+            mock={true}   // 지금은 테스트용
           />
 
           <SmallCard>운세 받아와서 로드하기</SmallCard>

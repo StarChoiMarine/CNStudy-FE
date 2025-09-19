@@ -1,10 +1,8 @@
-// src/page/SummaryPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { http } from "../api/axios";
 import { Link, useLocation } from "react-router-dom";
 import Header from "../component/Header";
 
-// ✅ 공통 스타일 불러오기
 import { Container, FormWrapper, Title, Button, Input } from "../styles/common";
 
 const SummaryPage = () => {
@@ -14,23 +12,22 @@ const SummaryPage = () => {
   const [category, setCategory] = useState("전체");
   const location = useLocation();
 
-  // 🔍 검색 상태
+  
   const [query, setQuery] = useState("");
-  const [scope, setScope] = useState("all"); // all | title | author | content
+  const [scope, setScope] = useState("all"); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await http.get("/summaries");
 
-        // id 기준 내림차순 정렬
         const toNum = (v) => {
           const n = Number(v);
           return Number.isFinite(n) ? n : -Infinity;
         };
         let sorted = [...data].sort((a, b) => toNum(b.id) - toNum(a.id));
 
-        // ✅ 쿼리파라미터(tag) 확인해서 해시태그 필터링
+        // 쿼리파라미터(tag) 확인해서 해시태그 필터링
         const params = new URLSearchParams(location.search);
         const tag = params.get("tag");
         if (tag) {
@@ -45,7 +42,7 @@ const SummaryPage = () => {
     fetchData();
   }, [location.search]);
 
-  // 🔍 검색 필터링
+  // 검색 필터링
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return summaries;
@@ -62,7 +59,7 @@ const SummaryPage = () => {
     });
   }, [summaries, query, scope]);
 
-  // 검색 조건 바뀌면 1페이지로
+
   useEffect(() => {
     setCurrentPage(1);
   }, [query, scope]);
@@ -81,7 +78,7 @@ const SummaryPage = () => {
         <FormWrapper style={{ width: "1000px", maxWidth: "100%" }}>
           <Title>강의 내용 게시판</Title>
 
-          {/* 🔍 검색 바 */}
+          {/* 검색 바 */}
           <div
             style={{
               display: "flex",
@@ -130,7 +127,7 @@ const SummaryPage = () => {
             </div>
           </div>
 
-          {/* 목록 테이블 */}
+         {/* 목록 테이블 */}
           <table
             style={{
               width: "100%",

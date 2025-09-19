@@ -17,11 +17,10 @@ const SummaryDetailPage = () => {
       try {
         const { data } = await http.get(`/summaries/${id}`);
 
-        // 조회수 증가
+        
         const updatedViews = (data.views || 0) + 1;
         setSummary({ ...data, views: updatedViews });
 
-        // 서버에 반영
         await http.patch(`/summaries/${id}`, { views: updatedViews });
 
         setComments(data.comments || []);
@@ -48,7 +47,6 @@ const SummaryDetailPage = () => {
     setComments(updated);
     setNewComment("");
 
-    // 서버 저장
     http.patch(`/summaries/${id}`, { comments: updated }).catch((err) =>
       console.error("댓글 저장 실패:", err)
     );
@@ -177,7 +175,7 @@ const SummaryDetailPage = () => {
                   try {
                     await http.delete(`/summaries/${summary.id}`);
                     alert("삭제되었습니다.");
-                    window.location.href = "/summary"; // 삭제 후 목록으로 이동
+                    window.location.href = "/summary"; 
                   } catch (err) {
                     console.error("삭제 실패:", err);
                     alert("삭제 중 오류가 발생했습니다.");
