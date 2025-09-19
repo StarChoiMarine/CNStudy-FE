@@ -4,6 +4,11 @@ import {
 } from "../api/todos";
 import TodoItem from "./TodoItem";
 
+const toLocalISODate = (d = new Date()) => {
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off * 60000).toISOString().slice(0, 10);
+};
+
 export default function TodoList({ mode = "all", dateISO, compact = false }) {
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
@@ -51,6 +56,7 @@ export default function TodoList({ mode = "all", dateISO, compact = false }) {
       id: `tmp-${Date.now()}`,
       title: content,
       completed: false,
+      date: dateISO || toLocalISODate(),
     };
     setTodos(prev => [temp, ...prev]);
     setTitle("");
