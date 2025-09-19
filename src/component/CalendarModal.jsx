@@ -113,7 +113,7 @@ export default function CalendarModal({ open, selectedDate, onClose }) {
           <Empty>일정이 없습니다.</Empty>
         )}
         <TodoBox>
-        <TodoList compact mode="all" dateISO={selectedDate}/>
+        <TodoList compact />
         </TodoBox>
       </Panel>
     </Backdrop>
