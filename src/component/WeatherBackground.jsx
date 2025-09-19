@@ -21,7 +21,7 @@ const Wrap = styled.div`
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(255, 255, 255, .22);
+    background: rgba(255, 255, 255, 0.09);
   }
 `;
 const Video = styled.video`
