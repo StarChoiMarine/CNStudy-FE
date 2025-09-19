@@ -1,4 +1,3 @@
-// src/component/LeaderBoard.jsx
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { http } from "../api/axios";
@@ -95,18 +94,25 @@ function sortByScore(a, b) {
 }
 const assignRanks = (arr) => arr.map((x, i) => ({ ...x, rank: i + 1 }));
 
+
+
 /* ============ component ============ */
 export default function LeaderBoard() {
-  const [leaders, setLeaders] = useState([]);  // [{ userId, userName, postCount, commentCount, score }]
+  const [leaders, setLeaders] = useState([]);  
   const [loading, setLoading] = useState(true);
+
+
 
   useEffect(() => {
     (async () => {
       try {
+        
         // 백엔드: GET /api/v1/rank/leaderboard?size=10
         const res = await http.get("/api/v1/rank/leaderboard", { params: { size: 10 } });
         const data = Array.isArray(res.data) ? res.data : [];
-        // 안정성: 혹시 정렬이 보장 안 되면 클라에서 재정렬
+      
+
+
         const sorted = [...data].sort(sortByScore);
         setLeaders(assignRanks(sorted));
       } catch (e) {

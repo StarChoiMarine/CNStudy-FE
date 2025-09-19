@@ -1,8 +1,8 @@
-// src/page/SummaryPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { http } from "../api/axios";
 import { Link, useLocation } from "react-router-dom";
 import Header from "../component/Header";
+
 import { Container, FormWrapper, Title, Button, Input } from "../styles/common";
 
 const SummaryPage = () => {
@@ -12,7 +12,7 @@ const SummaryPage = () => {
   const [category, setCategory] = useState("전체"); // (옵션) 카테고리 필터
   const location = useLocation();
 
-  // 🔍 검색 상태
+  
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("all"); // all | title | author | content
 
@@ -47,14 +47,13 @@ const SummaryPage = () => {
         const { data } = await http.get("/api/v1/boards/list");
         const rows = Array.isArray(data) ? data.map(normalizeBoard) : [];
 
-        // id 내림차순 정렬(숫자인 경우 우선)
         const toNum = (v) => {
           const n = Number(v);
           return Number.isFinite(n) ? n : -Infinity;
         };
         let sorted = [...rows].sort((a, b) => toNum(b.id) - toNum(a.id));
 
-        // ✅ 쿼리파라미터(tag)로 해시태그 필터링 유지
+        // 쿼리파라미터(tag) 확인해서 해시태그 필터링
         const params = new URLSearchParams(location.search);
         const tag = params.get("tag");
         if (tag) {
@@ -70,7 +69,7 @@ const SummaryPage = () => {
     fetchData();
   }, [location.search]);
 
-
+  // 검색 필터링
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
 
@@ -187,7 +186,7 @@ const SummaryPage = () => {
             </div>
           </div>
 
-          {/* 목록 테이블 */}
+         {/* 목록 테이블 */}
           <table
             style={{
               width: "100%",

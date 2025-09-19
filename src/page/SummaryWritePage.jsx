@@ -11,7 +11,7 @@ const SummaryWritePage = () => {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("기타");
 
-  const [hashtags, setHashtags] = useState([]); // string[]
+  const [hashtags, setHashtags] = useState([]); 
   const [tagInput, setTagInput] = useState("");
 
   const [aiKeyword, setAiKeyword] = useState("");
@@ -88,7 +88,6 @@ const SummaryWritePage = () => {
     alert("임시 저장되었습니다!");
   };
 
-  // ✅ 해시태그 추가
   const handleAddTag = (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -100,7 +99,6 @@ const SummaryWritePage = () => {
     }
   };
 
-  // ✅ 해시태그 삭제
   const handleRemoveTag = (tag) => {
     setHashtags((prev) => prev.filter((t) => t !== tag));
   };

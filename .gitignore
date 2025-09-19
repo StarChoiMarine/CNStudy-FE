@@ -28,6 +28,7 @@ yarn-error.log*
 
 #로컬 mock 데이터
 
+/db.json
 
 .env
 
