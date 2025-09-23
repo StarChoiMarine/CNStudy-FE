@@ -1,4 +1,4 @@
-# 처음 프로젝트 실행 방법
+# LG CNS AM Inspire Camp 3th 스터디 앱 Frontend
 git clone https://github.com/StarChoiMarine/CNStudy-FE.git
 cd CNStudy-FE
 npm install   # styled-components, axios, json-server 등 의존성 자동 설치
